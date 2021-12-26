@@ -3,16 +3,14 @@
 
 #include <vector>
 #include <string>
-#include "../model/Node.h"
 
 using namespace std;
 
 /**
  * Define below directories.
  */
-#define DATA_DIR "../data/TSP_VLSI_DATASET/"
-#define RESULT_DIR "../result/TSP_VLSI_DATASET/"
-#define USAGE_DIR "../data/USAGE/usage.txt"
+#define DATA_DIR "../data/TSPLIB/" // in ./build
+//#define DATA_DIR "../../data/TSPLIB/" // in ./debug ./model
 
 /**
  * Convert TSP data file name to its absolute file path.
@@ -23,38 +21,11 @@ using namespace std;
 string convertToDataPath(const string& file_name);
 
 /**
- * Convert TSP data file name to absolute file path of result tour data file
- * 
- * @param file_name
- * @return absolute file path of result tour data file
- */
-string convertToResultPath(const string& file_name);
-
-/**
  * Read the node data set from TSP data file.
  * 
  * @param file_name
  * @return vector of node datas
  */
-vector<vector <int> > readTSPFile(const string& file_name);
-
-/**
- * Write txt file of tour infomation
- * 
- * @param file_name, tour data
- */
-// void writeTourAsFile(const string file_name, Tour &tour)
-
-/**
- * Print txt file on command line
- * 
- * @param file_path
- */
-void printFileOnConsole(const string& file_path);
-
-/**
- * Print usage file on command line
- */
-void printUsage();
+vector<vector <double> > readTSPFile(const string& file_name);
 
 #endif //TSP_FILEIOHELPER_H

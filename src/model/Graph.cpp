@@ -1,108 +1,73 @@
 #include "Graph.h"
-#include "Distance.h"
 #include "Node.h"
-#include <iostream>
-#include <algorithm>
-#include <limits.h> // INT_MIN INT_MAX
+#include "../helper/FileIOHelper.h"
+#include <float.h> // DBL_MIN DBL_MAX
 
 using namespace std;
 
 namespace GraphHelper{
-  bool compare(pair<int,double> a, pair<int,double> b){
-    if (a.second == b.second) {
-      return a.first < b.first;
-    } else {
-      return a.second < b.second;
-    }
-  };
+  vector<Node> scaleNodes(vector<Node>& nodes_ori){
+    // find minimum and maximum coordinates
+    double xMin = DBL_MAX;
+    double xMax = DBL_MIN;
+    double yMin = DBL_MAX;
+    double yMax = DBL_MIN;
 
-  vector<int> setXYMinMax(vector<Node>& nodes){
-    int xMin = INT_MAX;
-    int xMax = INT_MIN;
-    int yMin = INT_MAX;
-    int yMax = INT_MIN;
-
-    for(auto node : nodes){
+    for(auto node : nodes_ori){
       if(xMin > node.x) xMin = node.x;
       if(xMax < node.x) xMax = node.x;
       if(yMin > node.y) yMin = node.y;
       if(yMax < node.y) yMax = node.y;
     }
 
-    vector<int> rst_vec = {xMin,xMax,yMin,yMax};
+    // Min-Max scale nodes_ori
+    vector<Node> rst_vec;
+    rst_vec.reserve(nodes_ori.size());
 
-    return rst_vec;
-  }
+    double rst_scaled_x = 0.0;
+    double rst_scaled_y = 0.0;
 
-  vector<ScaledNode> genScaledNodes(vector<Node>& nodes, int xMin, int xMax, int yMin, int yMax){
-    int x_interval = xMax - xMin;
-    int y_interval = yMax - yMin;
-
-    vector<ScaledNode> rst_vec;
-    rst_vec.reserve(nodes.size());
-
-    double rst_scaledNode_x = 0.0;
-    double rst_scaledNode_y = 0.0;
-
-    for(auto node:nodes){
-      rst_scaledNode_x = (double)(node.x - xMin) / x_interval;
-      rst_scaledNode_y = (double)(node.y - yMin) / y_interval;
-
-      ScaledNode rst_scaleNode = ScaledNode(node.index, rst_scaledNode_x, rst_scaledNode_y);
-      rst_vec.emplace_back(rst_scaleNode);
+    for(auto node : nodes_ori){
+      rst_scaled_x = (node.x - xMin) / (xMax - xMin);
+      rst_scaled_y = (node.y - yMin) / (yMax - yMin);
+      rst_vec.emplace_back(node.index, rst_scaled_x, rst_scaled_y);
     }
 
     return rst_vec;
   }
 }
 
-Graph::Graph(vector<vector<int>> &node_data){
-  this->n = node_data.size();
-  this->nodes.reserve(this->n + 2);
+Graph::Graph(string& instance_name){
+  // read TSP instance data file
+  vector<vector<double> > nodes_data = readTSPFile(instance_name);
+  this->n = nodes_data.size();
 
-  //add dummy node in nodes[0]
-  this->nodes.emplace_back(0,0,0);
-
-  for (auto single_data : node_data) {
-    this->nodes.emplace_back(single_data[0], single_data[1], single_data[2]);
+  // copy TSP instance to nodes_ori
+  this->nodes_ori.reserve(this->n + 2); // pi(0) and pi(n+1)
+  this->nodes_ori.emplace_back(0,0.0,0.0); // dummy data in pi(0)
+  for(auto node_data : nodes_data){
+    this->nodes_ori.emplace_back((int)node_data[0],node_data[1],node_data[2]);
   }
+  this->nodes_ori[0].setNode(this->nodes_ori[this->n]); // nodes_ori[0] == nodes_ori[n]
+  this->nodes_ori.emplace_back(this->nodes_ori[1]); // nodes_ori[n+1] == nodes_ori[1];
 
-  //nodes[0] == nodes[n]
-  this->nodes[0].setNode(this->nodes[this->n]);
-  //nodes[n+1] == nodes[1]
-  this->nodes.emplace_back(this->nodes[1]);
-
-  this->setDistOrder();
-
-  vector<int> xyMinMax = GraphHelper::setXYMinMax(this->nodes);
-  this->xMin = xyMinMax[0];
-  this->xMax = xyMinMax[1];
-  this->yMin = xyMinMax[2];
-  this->yMax = xyMinMax[3];
-
-  this->scaledNodes = GraphHelper::genScaledNodes(this->nodes, this->xMin, this->xMax, this->yMin, this->yMax);
+  // nodes is Min-Max scald nodes_ori
+  this->nodes = GraphHelper::scaleNodes(this->nodes_ori);
 }
 
 vector<Node> Graph::getNodes() const{
   return this->nodes;
 }
 
-vector<ScaledNode> Graph::getScaledNodes() const{
-  return this->scaledNodes;
-}
-
 Node Graph::getNode(int i) const{
   return this->nodes.at(i);
-}
-
-ScaledNode Graph::getScaledNode(int i) const{
-  return this->scaledNodes.at(i);
 }
 
 int Graph::getN() const {
   return this->n;
 }
 
+/*
 void Graph::setDistOrder() {
   this->distOrder.reserve(this->n +1);
 
@@ -120,3 +85,4 @@ void Graph::setDistOrder() {
     this->distOrder.emplace_back(dummyVector);
   }
 }
+*/
