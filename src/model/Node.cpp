@@ -9,7 +9,7 @@ Node::Node(int index, double x, double y) {
   this->y = y;
 }
 
-void Node::printNode() {
+void Node::printNode() const{
   cout << "index : " << this->index << "\t" ;
   cout << "x : " << this->x << "\t";
   cout << "y : " << this->y << "\n";

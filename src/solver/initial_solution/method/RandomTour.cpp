@@ -1,4 +1,3 @@
-#include <cstdlib> // should be replaced to <random>'s mt19937
 #include <iostream>
 #include <vector>
 #include <algorithm>

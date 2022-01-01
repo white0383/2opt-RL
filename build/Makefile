@@ -321,6 +321,126 @@ src/model/Node.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/model/Node.cpp.s
 .PHONY : src/model/Node.cpp.s
 
+src/model/Tour.o: src/model/Tour.cpp.o
+.PHONY : src/model/Tour.o
+
+# target to build an object file
+src/model/Tour.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o
+.PHONY : src/model/Tour.cpp.o
+
+src/model/Tour.i: src/model/Tour.cpp.i
+.PHONY : src/model/Tour.i
+
+# target to preprocess a source file
+src/model/Tour.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.i
+.PHONY : src/model/Tour.cpp.i
+
+src/model/Tour.s: src/model/Tour.cpp.s
+.PHONY : src/model/Tour.s
+
+# target to generate assembly for a file
+src/model/Tour.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.s
+.PHONY : src/model/Tour.cpp.s
+
+src/solver/initial_solution/GenerateInitialSolution.o: src/solver/initial_solution/GenerateInitialSolution.cpp.o
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.o
+
+# target to build an object file
+src/solver/initial_solution/GenerateInitialSolution.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.cpp.o
+
+src/solver/initial_solution/GenerateInitialSolution.i: src/solver/initial_solution/GenerateInitialSolution.cpp.i
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.i
+
+# target to preprocess a source file
+src/solver/initial_solution/GenerateInitialSolution.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.i
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.cpp.i
+
+src/solver/initial_solution/GenerateInitialSolution.s: src/solver/initial_solution/GenerateInitialSolution.cpp.s
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.s
+
+# target to generate assembly for a file
+src/solver/initial_solution/GenerateInitialSolution.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.s
+.PHONY : src/solver/initial_solution/GenerateInitialSolution.cpp.s
+
+src/solver/initial_solution/method/FarthestInsertion.o: src/solver/initial_solution/method/FarthestInsertion.cpp.o
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.o
+
+# target to build an object file
+src/solver/initial_solution/method/FarthestInsertion.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.cpp.o
+
+src/solver/initial_solution/method/FarthestInsertion.i: src/solver/initial_solution/method/FarthestInsertion.cpp.i
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.i
+
+# target to preprocess a source file
+src/solver/initial_solution/method/FarthestInsertion.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.i
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.cpp.i
+
+src/solver/initial_solution/method/FarthestInsertion.s: src/solver/initial_solution/method/FarthestInsertion.cpp.s
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.s
+
+# target to generate assembly for a file
+src/solver/initial_solution/method/FarthestInsertion.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.s
+.PHONY : src/solver/initial_solution/method/FarthestInsertion.cpp.s
+
+src/solver/initial_solution/method/NearestNeighbor.o: src/solver/initial_solution/method/NearestNeighbor.cpp.o
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.o
+
+# target to build an object file
+src/solver/initial_solution/method/NearestNeighbor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.cpp.o
+
+src/solver/initial_solution/method/NearestNeighbor.i: src/solver/initial_solution/method/NearestNeighbor.cpp.i
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.i
+
+# target to preprocess a source file
+src/solver/initial_solution/method/NearestNeighbor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.i
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.cpp.i
+
+src/solver/initial_solution/method/NearestNeighbor.s: src/solver/initial_solution/method/NearestNeighbor.cpp.s
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.s
+
+# target to generate assembly for a file
+src/solver/initial_solution/method/NearestNeighbor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.s
+.PHONY : src/solver/initial_solution/method/NearestNeighbor.cpp.s
+
+src/solver/initial_solution/method/RandomTour.o: src/solver/initial_solution/method/RandomTour.cpp.o
+.PHONY : src/solver/initial_solution/method/RandomTour.o
+
+# target to build an object file
+src/solver/initial_solution/method/RandomTour.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o
+.PHONY : src/solver/initial_solution/method/RandomTour.cpp.o
+
+src/solver/initial_solution/method/RandomTour.i: src/solver/initial_solution/method/RandomTour.cpp.i
+.PHONY : src/solver/initial_solution/method/RandomTour.i
+
+# target to preprocess a source file
+src/solver/initial_solution/method/RandomTour.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.i
+.PHONY : src/solver/initial_solution/method/RandomTour.cpp.i
+
+src/solver/initial_solution/method/RandomTour.s: src/solver/initial_solution/method/RandomTour.cpp.s
+.PHONY : src/solver/initial_solution/method/RandomTour.s
+
+# target to generate assembly for a file
+src/solver/initial_solution/method/RandomTour.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.s
+.PHONY : src/solver/initial_solution/method/RandomTour.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -354,6 +474,21 @@ help:
 	@echo "... src/model/Node.o"
 	@echo "... src/model/Node.i"
 	@echo "... src/model/Node.s"
+	@echo "... src/model/Tour.o"
+	@echo "... src/model/Tour.i"
+	@echo "... src/model/Tour.s"
+	@echo "... src/solver/initial_solution/GenerateInitialSolution.o"
+	@echo "... src/solver/initial_solution/GenerateInitialSolution.i"
+	@echo "... src/solver/initial_solution/GenerateInitialSolution.s"
+	@echo "... src/solver/initial_solution/method/FarthestInsertion.o"
+	@echo "... src/solver/initial_solution/method/FarthestInsertion.i"
+	@echo "... src/solver/initial_solution/method/FarthestInsertion.s"
+	@echo "... src/solver/initial_solution/method/NearestNeighbor.o"
+	@echo "... src/solver/initial_solution/method/NearestNeighbor.i"
+	@echo "... src/solver/initial_solution/method/NearestNeighbor.s"
+	@echo "... src/solver/initial_solution/method/RandomTour.o"
+	@echo "... src/solver/initial_solution/method/RandomTour.i"
+	@echo "... src/solver/initial_solution/method/RandomTour.s"
 .PHONY : help
 
 

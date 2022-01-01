@@ -27,13 +27,16 @@ class Tour{
      * The order of visiting city
      * integer in the vector represent the index of city.
      */
-    vector<int> tour;
-
     vector<int> pi; // pi[0] = pi[size], pi[size+1]=pi[1]
-    vector<int> pi_inv;
+
+    // when pi_inv[i] == -1, 
+    // it means that a node "i" is not included in this Tour
+    // Likewise, when pi_inv[j] > 0
+    // it means that a node "j" is included in this Tour
+    vector<int> pi_inv; // pi_inv[0] = -1, pi_inv[pi[i]] = i (i = 1~size)
 
     /**
-     * Total distance of Tour
+     * Total distance of this Tour
      * Sum of every edge on Tour
      */
     double cost;
@@ -42,12 +45,6 @@ class Tour{
      * The number of cities which Tour object has.
      */
     int size;
-
-    /**
-     * This is "true" when Tour is local Optimal solution.
-     * default value is "false"
-     */
-    bool localOpt = false;
 
   public:
     /**
@@ -62,9 +59,9 @@ class Tour{
      * 
      * Example)
      * Tour t1 = new Tour({1,4,2})
-     * t1.tour -> {1,4,2}
+     * t1.pi -> {1,4,2}
      */
-    Tour(const vector<int> &order, const Graph& g);
+    Tour(const vector<int> &orders, const Graph& g);
 
     /**
      * Default destructor
@@ -78,7 +75,7 @@ class Tour{
      * 
      * verify Tour before return
      */
-    void setNewTour(const vector<int> &newTour, const Graph& g);
+    void setNewTour(const vector<int> &newOrders, const Graph& g);
 
     /**
      * CompleteTour is "Verified" Tour which has g.getN() elements in tour
@@ -101,13 +98,6 @@ class Tour{
      * @param Graph g
      */
     void setCost(const Graph &g);
-
-    /**
-     * Get tour vector of this object
-     * 
-     * @return this->tour 
-     */
-    vector<int>& getTour();
 
     /**
      * Get size of this tour object
@@ -142,7 +132,11 @@ class Tour{
      * pi(4) == 6 : Fourth city of tour is "6"
      * pi(7) == 3 : Seventh city of tour is same to third city because tour is cycle.
      */
-    int pi(int order);
+    int getPi(int order);
+    vector<int> getPi();
+
+    int getPiInv(int index);
+    vector<int> getPiInv();
 
     /**
      * Return the "order"th visited city as Node
@@ -154,29 +148,18 @@ class Tour{
      * pi_node(4) == g.nodes[6] : Fourth city of tour is "6"
      * pi_node(7) == g.nodes[3] : Seventh city of tour is same to third city because tour is cycle.
      */
-    Node pi_node(int order, const Graph& g);
+    Node getPi_node(int order, const Graph& g);
 
     /**
-     * This function is only operated in local searchers
+     * insert new Node in Tour
+     * let index of new node is k
+     * let size of tour is m
+     * then new Tour is {pi_0 == pi_m, pi_1, ... pi_i, k, pi_i+1, pi_m, pi_m+1 == pi_1}
+     * exceptly, when k is equal to m
+     * then new Tour is {k, pi_1, ..., pi_m, k, pi_m+1 == pi_1}
      */
-    void setThisIsLocalOpt();
 
-    /**
-     * Getter of this->localOpt
-     */
-    bool isLocalOpt();
-
+    void insert(int newNodeIndex, int i, const Graph& g);
 };
-
-/**
- * Check tour vector is well-defined.
- * If there is any node that apeears more than once in tour vector,
- * or if there is any node that is not included in Graph g,
- * then this tour vector is not well defined
- * 
- * @param 
- * @return true -> this vector is good Tour
- */
-bool verifyTour(const vector<int> &tour, const Graph& g);
 
 #endif //TSP_TOUR_H

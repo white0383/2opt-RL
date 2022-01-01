@@ -8,6 +8,11 @@
 //#include "./RLmodel/LinearFittedQIteration.h"
 #include "./helper/FileIOHelper.h"
 
+// includes for debugging
+#include <ctime>
+#include "./model/Tour.h"
+#include "./solver/initial_solution/GenerateInitialSolution.h"
+
 using namespace std;
 
 const map<string, double> OPT_VALUE {
@@ -23,18 +28,19 @@ const map<string, double> OPT_VALUE {
 };
 
 vector<string> WHOLE_FILES = {
-"a280", "eil51", "ida8197", "lin318", "pcb3038", "pr144", "rd100", "ulysses16",
-"ali535", "burma14", "dbj2924", "eil76", "gr137", "kroA100", "linhp318", "pcb442", "pr152", "rd400", "ts225", "ulysses22",
-"att48", "ch130", "dea2382", "fdp3256", "kroA150", "lsm2854", "pia3056", "pr226", "rl11849", "tsp225", "usa13509",
-"att532", "ch150", "dga9698", "fjr3672", "gr202", "kroA200", "lsn3119", "pka379", "pr2392", "rl1304", "vm1084",
-"d1291", "dhb3386", "fjs3649", "kroB100", "lta3140", "pla33810", "pr264", "rl1323", "u1060", "vm1748",
-"d15112", "dka1376", "fl1400", "gr229", "kroB150", "ltb3729", "pla7397", "pr299", "rl1889", "u1432", "xmc10150",
-"bch2762", "d1655", "dkc3938", "fl1577", "kroB200", "nrw1379", "pla85900", "pr439", "rl5915", "u159", "xqe3891",
-"beg3293", "d18512", "dke3097", "fl3795", "gr431", "kroC100", "p654", "pma343", "pr76", "rl5934", "u1817", "xqf131",
-"berlin52", "d198", "dkf3954", "fl417", "kroD100", "pr1002", "rat195", "u2152", "xqg237",
-"bier127", "d2103", "dlb3694", "fnl4461", "kroE100", "pbd984", "pr107", "rat575", "u2319", "xql662",
-"d493", "dsj1000", "gr96", "lap7454", "pbn423", "pr124", "rat783", "u574", "xsc6880",
-"brd14051", "d657", "eil101", "gil262","lin105", "pcb1173", "pr136", "rat99", "st70", "u724", "xua3937"
+"burma14", "ulysses16", "ulysses22", "att48", "eil51", "berlin52", "st70", "eil76", "pr76", "gr96", 
+"rat99", "rd100", "kroA100", "kroB100", "kroC100", "kroD100", "kroE100", "eil101", "lin105", "pr107", 
+"pr124", "bier127", "ch130", "xqf131", "pr136", "gr137", "pr144", "kroA150", "ch150", "kroB150", 
+"pr152", "u159", "rat195", "d198", "kroA200", "kroB200", "gr202", "ts225", "tsp225", "pr226", 
+"gr229", "xqg237", "gil262", "pr264", "a280", "pr299", "lin318", "linhp318", "pma343", "pka379", 
+"rd400", "fl417", "pbn423", "gr431", "pr439", "pcb442", "d493", "att532", "ali535", "u574", 
+"rat575", "p654", "d657", "xql662", "u724", "rat783", "pbd984", "dsj1000", "pr1002", "u1060", 
+"vm1084", "pcb1173", "d1291", "rl1304", "rl1323", "dka1376", "nrw1379", "fl1400", "u1432", "fl1577", 
+"d1655", "vm1748", "u1817", "rl1889", "d2103", "u2152", "u2319", "dea2382", "pr2392", "bch2762", 
+"lsm2854", "dbj2924", "pcb3038", "pia3056", "dke3097", "lsn3119", "lta3140", "fdp3256", "beg3293", "dhb3386", 
+"fjs3649", "fjr3672", "dlb3694", "ltb3729", "fl3795", "xqe3891", "xua3937", "dkc3938", "dkf3954", "fnl4461", 
+"rl5915", "rl5934", "xsc6880", "pla7397", "lap7454", "ida8197", "dga9698", "xmc10150", "rl11849", "usa13509", 
+"brd14051", "d15112", "d18512", "pla33810", "pla85900", 
 };
 
 int main(){
@@ -42,9 +48,9 @@ int main(){
   /**** Set your test config here. ****/
   /************************************/
   //**** Methods
-  vector<string> TSPLIB_instances = {"eil51", "berlin52", "st70"};
+  vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299","u1060" };
   vector<string> VLSI_instances = {"xqf131", "xqg237", "pma343","xql662"};
-  string tourInitMethod = "RT"; // RT FI
+  string tourInitMethod = "FI"; // RT FI
   string learnTermiCondi = "EPI"; // EPI SEC
   string thetaInitMethod = "UNI"; // UNI GAU ONE
 
@@ -62,32 +68,19 @@ int main(){
   double greedyEps = 0.1; // probability of random action
 
   //**** Other Hyperparameters
-  unsigned int SEED =  12080300;
+  unsigned int SEED =  1208030;
   unsigned int EPILMT = 50;
   double secLmt = 180.0;
 
   /* use below while implementation */
-  //"ArgumentsDebug" "a280"
-  vector<string> argSTR = {"ArgumentsDebug", tourInitMethod, learnTermiCondi, thetaInitMethod};
+  /*********************************/
+  //"ArgumentsDebug" 
+  vector<string> argSTR = {TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
   vector<unsigned int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
   vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
   Arguments tspArgs = Arguments(argSTR, argINT, argREA);
-  for(int i=0;i<tspArgs.V.distMatrix.size();i++){
-    cout << "i : " << i <<" :: ";
-    for(int j=0;j<tspArgs.V.distMatrix[i].size();j++){
-      cout << tspArgs.V.distMatrix[i][j] << " ";
-    }
-    cout << endl;
-  }
 
-  for(int i=0;i<tspArgs.partitions.size();i++){
-    cout << "i : " << i <<" :: ";
-    for(int j=0;j<tspArgs.partitions[i].size();j++){
-      cout << tspArgs.partitions[i][j] << " ";
-    }
-    cout << endl;
-  }
   //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
   //LinQ.learn(tspArgs);
   /*********************************/

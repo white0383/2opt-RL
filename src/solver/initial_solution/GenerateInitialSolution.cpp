@@ -47,6 +47,7 @@ Tour generateInitialSolution(const Graph& g, const string& method){
    * Using string in switch statement makes code longer and hard to read.
    * Moreover, switch statement is not that faster than this short if-else chain (in my opinion)
    */
+  Tour tmpt = Tour();
   
   if(method.compare("RT") == 0) {
     return randomTour(g);
@@ -79,41 +80,5 @@ Tour generateInitialSolution(const Graph& g, const string& method){
 }
 
 Tour generateInitialSolution(const Arguments& tspArgs){
-    /**
-   * There are several ways to avoid if-else statement like below,
-   * but this is much easier to read and manage.
-   * 
-   * Using string in switch statement makes code longer and hard to read.
-   * Moreover, switch statement is not that faster than this short if-else chain (in my opinion)
-   */
-  string method = tspArgs.INIT_SOLUTION_METHOD;
-    
-  if(method.compare("RT") == 0) {
-    return randomTour(tspArgs.V);
-  }else if (method.compare("NN") == 0){
-    return nearestNeighbor(tspArgs.V);
-  //######### BEGIN: NOT YET IMPLEMENTED
-  //}else if (method.compare("NA") == 0){
-
-  //}else if (method.compare("NI") == 0){
-
-  //}else if (method.compare("CI") == 0){
-
-  }else if (method.compare("FI") == 0){
-    return farthestInsertion(tspArgs.V);
-  //}else if (method.compare("RI") == 0){
-
-  //}else if (method.compare("GA") == 0){
-
-  //}else if (method.compare("CW") == 0){
-
-  //}else if (method.compare("CF") == 0){
-
-  //}else if (method.compare("CH") == 0){
-  //######### END: NOT YET IMPLEMENTED
-  }else {
-    //後でthrow文で書き直す
-    cout << "ERROR : invalid GenInit method name" << endl;
-    exit(1);
-  }
+  return generateInitialSolution(tspArgs.V, tspArgs.TOUR_INIT_METHOD);
 }

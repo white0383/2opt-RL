@@ -125,10 +125,24 @@ CMakeFiles/2opt_RL.dir/src/model/Distance.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/model/Distance.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Distance.cpp -o CMakeFiles/2opt_RL.dir/src/model/Distance.cpp.s
 
+CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o: ../src/model/Tour.cpp
+CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o -MF CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Tour.cpp
+
+CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Tour.cpp > CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Tour.cpp -o CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.s
+
 CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
 CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: ../src/model/Arguments.cpp
 CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o -MF CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Arguments.cpp
 
 CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.s: cmake_force
 CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
 CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o: ../src/helper/FileIOHelper.cpp
 CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o -MF CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/helper/FileIOHelper.cpp
 
 CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.s: cmake_force
 CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
 CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o: ../src/helper/mt19937ar.cpp
 CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o -MF CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/helper/mt19937ar.cpp
 
 CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.s: cmake_force
 CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
 CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o: ../src/helper/RandVec.cpp
 CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o -MF CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/helper/RandVec.cpp
 
 CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.i: cmake_force
@@ -181,16 +195,77 @@ CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/helper/RandVec.cpp -o CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s
 
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o: ../src/solver/initial_solution/GenerateInitialSolution.cpp
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/GenerateInitialSolution.cpp
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/GenerateInitialSolution.cpp > CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/GenerateInitialSolution.cpp -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.s
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o: ../src/solver/initial_solution/method/RandomTour.cpp
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/RandomTour.cpp
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/RandomTour.cpp > CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/RandomTour.cpp -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.s
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o: ../src/solver/initial_solution/method/NearestNeighbor.cpp
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/NearestNeighbor.cpp
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/NearestNeighbor.cpp > CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/NearestNeighbor.cpp -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.s
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o: ../src/solver/initial_solution/method/FarthestInsertion.cpp
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/FarthestInsertion.cpp
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/FarthestInsertion.cpp > CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/initial_solution/method/FarthestInsertion.cpp -o CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.s
+
 # Object files for target 2opt_RL
 2opt_RL_OBJECTS = \
 "CMakeFiles/2opt_RL.dir/src/main.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/model/Graph.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/model/Node.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/model/Distance.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o" \
-"CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o"
+"CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o"
 
 # External object files for target 2opt_RL
 2opt_RL_EXTERNAL_OBJECTS =
@@ -199,10 +274,15 @@ CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s: cmake_force
 2opt_RL: CMakeFiles/2opt_RL.dir/src/model/Graph.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/model/Node.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/model/Distance.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/model/Tour.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/helper/FileIOHelper.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/helper/mt19937ar.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/RandomTour.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/NearestNeighbor.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/build.make
 2opt_RL: /Applications/CPLEX_Studio1210/cplex/lib/x86-64_osx/static_pic/libcplex.a
 2opt_RL: /Applications/CPLEX_Studio1210/cplex/lib/x86-64_osx/static_pic/libcplexdistmip.a
@@ -210,7 +290,7 @@ CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s: cmake_force
 2opt_RL: /Applications/CPLEX_Studio1210/concert/lib/x86-64_osx/static_pic/libconcert.a
 2opt_RL: /Applications/CPLEX_Studio1210/cpoptimizer/lib/x86-64_osx/static_pic/libcp.a
 2opt_RL: CMakeFiles/2opt_RL.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable 2opt_RL"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable 2opt_RL"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/2opt_RL.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

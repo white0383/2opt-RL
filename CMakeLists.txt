@@ -49,7 +49,7 @@ add_executable(${PROJECT_NAME}
   ./src/model/Graph.cpp 
   ./src/model/Node.cpp 
   ./src/model/Distance.cpp
-  #./src/model/Tour.cpp
+  ./src/model/Tour.cpp
   ./src/model/Arguments.cpp
   #./src/RLmodel/LinearFittedQIteration.cpp
   #./src/RLmodel/MarkovDecisionProcess.cpp
@@ -58,10 +58,10 @@ add_executable(${PROJECT_NAME}
   ./src/helper/RandVec.cpp
   #./src/helper/fitLinearQ.cpp
   #./src/helper/fitLP.cpp
-  #./src/solver/initial_solution/GenerateInitialSolution.cpp
-  #./src/solver/initial_solution/method/RandomTour.cpp
-  #./src/solver/initial_solution/method/NearestNeighbor.cpp
-  #./src/solver/initial_solution/method/FarthestInsertion.cpp
+  ./src/solver/initial_solution/GenerateInitialSolution.cpp
+  ./src/solver/initial_solution/method/RandomTour.cpp
+  ./src/solver/initial_solution/method/NearestNeighbor.cpp
+  ./src/solver/initial_solution/method/FarthestInsertion.cpp
   #./src/solver/local_search/SearchLocalOpt.cpp
   #./src/solver/local_search/method/TwoOpt.cpp
   #./src/solver/local_search/method/FastTwoOpt.cpp

@@ -12,7 +12,7 @@ class Node {
 
     Node(int index, double x, double y);
 
-    void printNode();
+    void printNode() const;
 
     void setNode(Node& newNode);
 };
