@@ -5,13 +5,15 @@
 #include <vector>
 #include <iostream>
 #include <cfloat> // DBL_MAX
-#include <algorithm>
 
 using namespace std;
 
+namespace tourHelper{
+
+} // end namespace tourHelper
+
 Tour::Tour(){
   this->cost = DBL_MAX;
-  this->scaledCost = DBL_MAX;
   this->size = 0;
 }
 
@@ -22,7 +24,6 @@ Tour::Tour(const vector<int>& order, const Graph& g){
   } else {
     this->tour = order;
     this->cost = DBL_MAX;
-    this->scaledCost = DBL_MAX;
     this->size = order.size();
   }
 }
@@ -34,7 +35,6 @@ void Tour::setNewTour(const vector<int>& newTour, const Graph& g){
   } else {
     this->tour = newTour;
     this->cost = DBL_MAX;
-    this->scaledCost = DBL_MAX;
     this->size = newTour.size();
   }
 }
@@ -58,9 +58,6 @@ bool Tour::isCompleteTour(const Graph& g){
 double Tour::getCost() {
   return this->cost;
 };
-double Tour::getScaledCost() {
-  return this->scaledCost;
-}
 
 void Tour::setCost(const Graph &g) {
   double cost = 0;
@@ -79,28 +76,6 @@ void Tour::setCost(const Graph &g) {
 
   this->cost = cost;
 };
-
-void Tour::setScaledCost(double _scost){
-  this->scaledCost = _scost;
-}
-
-void Tour::setScaledCost(const Graph& g){
-  double rst_scaledCost = 0;
-  vector<int>::iterator it;
-
-  //add from dist(1,2) to add(n-1, n)
-  for(it=this->tour.begin(); it!=this->tour.end()-1 ;it++){
-    ScaledNode currentScaledNode = g.scaledNodes[(*it)];
-    ScaledNode nextScaledNode = g.scaledNodes[(*(it +1))];
-    rst_scaledCost += dist(currentScaledNode, nextScaledNode);
-  }
-  //add dist(n,1)
-  ScaledNode firstScaledNode = g.scaledNodes[this->pi(1)];
-  ScaledNode lastScaledNode = g.scaledNodes[this->pi(this->size)];
-  rst_scaledCost += dist(firstScaledNode, lastScaledNode);
-
-  this->scaledCost = rst_scaledCost;
-}
 
 vector<int>& Tour::getTour(){
   return this->tour;
@@ -127,14 +102,6 @@ void Tour::printTour() {
   } else {
     cout << this->cost << endl;
   }
-
-  //3. print scaledCost
-  cout << "scaled cost : " ;
-  if(this->scaledCost == DBL_MAX){
-    cout << "Not yet Calculated" << endl;
-  } else {
-    cout << this->scaledCost << endl;
-  }  
 }
 
 int Tour::pi(int order){
@@ -151,45 +118,6 @@ Node Tour::pi_node(int order, const Graph& g){
   return g.nodes[Tour::pi(order)];
 }
 
-int Tour::piInverse(int index){
-  int piInv = -1;
-  for(int i=0;i<this->size;i++){
-    if(this->tour.at(i) == index){
-      piInv = i+1;
-      break;
-    }
-  }
-  return piInv;
-}
-
-bool Tour::isNodeIncluded(int index){
-  if(this->piInverse(index) != -1){
-    return true;
-  } else {
-    return false;
-  }
-}
-
-double Tour::getDistToNode(const Node& n, const Graph& g){
-  double rst_dist = DBL_MAX;
-  double tmp_dist = 0;
-
-  if(this->isNodeIncluded(n.index) == true){
-    return 0;
-  }
-
-  //else then
-  for(auto tmp_index : this->getTour()){
-    Node tmpNode = g.nodes[tmp_index];
-    tmp_dist = dist(n,tmpNode);
-    if(tmp_dist < rst_dist){
-      rst_dist = tmp_dist;
-    }
-  }
-
-  return rst_dist;
-}
-
 void Tour::setThisIsLocalOpt(){
   this->localOpt = true;
 }
@@ -200,7 +128,7 @@ bool Tour::isLocalOpt(){
 
 bool verifyTour(const vector<int> &order, const Graph& g){
   int maxIndex = g.getN();
-  vector<bool> visited = vector(maxIndex+1,false);
+  vector<bool> visited(maxIndex+1,false);
   bool isWellDefined = true;
 
   for(int city : order){

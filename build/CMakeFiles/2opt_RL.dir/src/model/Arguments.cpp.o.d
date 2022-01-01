@@ -236,6 +236,5 @@ CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/../model/Graph.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/Node.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/./Graph.h \
-  /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/./Distance.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/../helper/FileIOHelper.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/model/../helper/mt19937ar.h

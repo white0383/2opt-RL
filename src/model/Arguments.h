@@ -46,8 +46,6 @@ class Arguments {
     unsigned int K ; // lenght of feature vector and learning parameter vector (minus 1)
     Graph V; // set of nodes
     
-    vector<vector< double> > distMatrix;
-    vector<vector< int > > distOrder;
     vector<vector<int> > partitions;
 
   public :
@@ -55,7 +53,6 @@ class Arguments {
 
     Arguments(vector<string>& stringArgs, vector<unsigned int>& integerArgs, vector<double>& realArgs);
 
-    void setDistInfos();
     void setPartitions();
 };
 

@@ -1,7 +1,9 @@
 #include "Graph.h"
 #include "Node.h"
+#include "Distance.h"
 #include "../helper/FileIOHelper.h"
 #include <float.h> // DBL_MIN DBL_MAX
+#include <algorithm>
 
 using namespace std;
 
@@ -35,7 +37,83 @@ namespace GraphHelper{
 
     return rst_vec;
   }
-}
+
+  bool compare(pair<int,double> a, pair<int,double> b){
+    if (a.second == b.second) {
+      return a.first < b.first;
+    } else {
+      return a.second < b.second;
+    }
+  }
+
+  /**
+   * let A is distMatrix
+   * let B is distOrder
+   * let n is |V|
+   * 
+   * A[i][j] is dist(nodes[i],nodes[j])
+   * i and j are in [0,n+1]
+   * 
+   * B[i][j] is an index of j-th closest node of nodes[i]
+   * i is in [1,n]
+   * j is in [0,n-1]
+   * B[0] is a dummyVector whose contents are all -1
+   */
+  void setDistInfos(Graph& g){
+    int n = g.getN();
+    g.distMatrix.reserve(n+2);
+    g.distOrder.reserve(n+1);
+
+    vector<double> distMatrixColumn(n+2,0);
+    vector<int> distOrderColumn(n,-1);
+
+    pair<int,double> dummyPair(0,0.0);
+    vector< pair<int,double> > dummyVector(n, dummyPair);
+    int i=0;
+    int j=0;
+    double tmp_dist_ij = 0.0;
+
+    // i = 0
+    for(j=0;j<=n+1;j++){
+      distMatrixColumn[j] = dist(g.nodes[i], g.nodes[j]);
+    }
+    g.distMatrix.emplace_back(distMatrixColumn);
+    g.distOrder.emplace_back(distOrderColumn); // all -1
+
+    // i = 1 ~ n
+    for(i=1;i<=n;i++){
+      // j = 0
+      distMatrixColumn[0] = dist(g.nodes[i], g.nodes[0]);
+
+      // j = 1 ~ n
+      dummyVector.clear();
+      for(j=1;j<=n;j++){
+        tmp_dist_ij = dist(g.nodes[i],g.nodes[j]);
+        distMatrixColumn[j] = tmp_dist_ij;
+        dummyVector.emplace_back(make_pair(j,tmp_dist_ij));
+      }
+      sort(dummyVector.begin(),dummyVector.end(),GraphHelper::compare);
+      for(int k=0;k<n;k++){
+        distOrderColumn[k] = dummyVector[k].first;
+      }
+
+      // j = n+1
+      distMatrixColumn[n+1] = dist(g.nodes[i], g.nodes[n+1]);
+
+      // push back
+      g.distMatrix.emplace_back(distMatrixColumn);
+      g.distOrder.emplace_back(distOrderColumn);
+    }
+
+    // i = n+1
+    i = n+1;
+    for(j=0;j<=n+1;j++){
+      distMatrixColumn[j] = dist(g.nodes[i], g.nodes[j]);
+    }
+    g.distMatrix.emplace_back(distMatrixColumn);
+
+  }
+} // end namespace GraphHelper
 
 Graph::Graph(string& instance_name){
   // read TSP instance data file
@@ -53,6 +131,9 @@ Graph::Graph(string& instance_name){
 
   // nodes is Min-Max scald nodes_ori
   this->nodes = GraphHelper::scaleNodes(this->nodes_ori);
+
+  // set distOrder and distMatrix
+  GraphHelper::setDistInfos(*(this));
 }
 
 vector<Node> Graph::getNodes() const{
@@ -66,23 +147,3 @@ Node Graph::getNode(int i) const{
 int Graph::getN() const {
   return this->n;
 }
-
-/*
-void Graph::setDistOrder() {
-  this->distOrder.reserve(this->n +1);
-
-  pair<int,double> dummyPair(0,0.0);
-  vector< pair<int,double> > dummyVector(this->n, dummyPair);
-  this->distOrder.emplace_back(dummyVector);
-
-  for(int i=1;i<this->n+1;i++){
-    dummyVector.clear();
-    for(int j=1;j<this->n+1;j++){
-      dummyVector.emplace_back(make_pair(j,dist(this->nodes.at(i),this->nodes.at(j))));
-    }
-    // sort dummyVector 
-    sort(dummyVector.begin(), dummyVector.end(), GraphHelper::compare);
-    this->distOrder.emplace_back(dummyVector);
-  }
-}
-*/

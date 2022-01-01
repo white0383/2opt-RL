@@ -16,8 +16,8 @@
  * 
  * Example)
  * Graph = {1,2,3,4}  (index of nodes)
- * Tour pi_1 = {1,3,2,4} -> this is complete tour
- * Tour pi_2 = {4,3,2} -> this is not complete tour
+ * Tour pi_1 = {4,1,3,2,4,1} -> this is complete tour
+ * Tour pi_2 = {2,4,3,2,4} -> this is not complete tour
  * Tour pi_3 = {1,3,2,6} -> this is not Tour
  */
 
@@ -29,12 +29,14 @@ class Tour{
      */
     vector<int> tour;
 
+    vector<int> pi; // pi[0] = pi[size], pi[size+1]=pi[1]
+    vector<int> pi_inv;
+
     /**
      * Total distance of Tour
      * Sum of every edge on Tour
      */
     double cost;
-    double scaledCost;
 
     /**
      * The number of cities which Tour object has.
@@ -92,7 +94,6 @@ class Tour{
      * @return this->cost
      */
     double getCost();
-    double getScaledCost();
 
     /**
      * Calculate Tour's cost
@@ -100,8 +101,6 @@ class Tour{
      * @param Graph g
      */
     void setCost(const Graph &g);
-    void setScaledCost(const Graph &g);
-    void setScaledCost(double _scost);
 
     /**
      * Get tour vector of this object
@@ -156,32 +155,6 @@ class Tour{
      * pi_node(7) == g.nodes[3] : Seventh city of tour is same to third city because tour is cycle.
      */
     Node pi_node(int order, const Graph& g);
-
-    /**
-     * Inverse function of this->pi
-     * 
-     * Example)
-     * tour = {9,4,3,6}
-     * 
-     * piInverse(4) == 2 : City "4" is visited second
-     * piInverse(6) == 4 : City "6" is visited fourth
-     * piInverse(11) == -1 : City "11" is not visited. then return -1
-     */
-    int piInverse(int index);
-
-    /**
-     * If "index" is included in vector tour, return true
-     */
-    bool isNodeIncluded(int index);
-
-    /**
-     * Get distance between Tour and Node.
-     * Let Tour pi is {u_1, u_2, ... u_m} (subset of V).
-     * if Node n is in pi, distance is 0
-     * if Node n is not in pi,
-     * distance is min_{i = 1~m}(dist(u_i, n))
-     */
-    double getDistToNode(const Node& n, const Graph& g);
 
     /**
      * This function is only operated in local searchers

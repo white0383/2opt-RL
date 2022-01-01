@@ -73,6 +73,21 @@ int main(){
   vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
   Arguments tspArgs = Arguments(argSTR, argINT, argREA);
+  for(int i=0;i<tspArgs.V.distMatrix.size();i++){
+    cout << "i : " << i <<" :: ";
+    for(int j=0;j<tspArgs.V.distMatrix[i].size();j++){
+      cout << tspArgs.V.distMatrix[i][j] << " ";
+    }
+    cout << endl;
+  }
+
+  for(int i=0;i<tspArgs.partitions.size();i++){
+    cout << "i : " << i <<" :: ";
+    for(int j=0;j<tspArgs.partitions[i].size();j++){
+      cout << tspArgs.partitions[i][j] << " ";
+    }
+    cout << endl;
+  }
   //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
   //LinQ.learn(tspArgs);
   /*********************************/

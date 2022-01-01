@@ -32,6 +32,9 @@ class Graph {
      * the number of node that this graph has
      */
     int n;
+
+    vector<vector< double> > distMatrix;
+    vector<vector< int > > distOrder;
   
   public:
     /**

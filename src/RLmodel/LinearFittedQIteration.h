@@ -11,7 +11,7 @@
 
 class LinearFittedQIteration{
   public:
-    vector<double> weights;
+    vector<double> theta;
     deque<MDP> replayBuffer;
     
     // real world's computation time
@@ -40,11 +40,6 @@ class LinearFittedQIteration{
     //For calculating feature vector and reward
     unsigned int bestTime;
     double bestDist;
-    vector<unsigned int> lastTimeNodeActioned;
-    deque<double> distQueue; // maximum length is THETA in tspArgs
-    vector<int> V_smp;
-
-    //For showing performance
     Tour bestTour;
 
   public:

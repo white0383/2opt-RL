@@ -4,11 +4,9 @@
 #include <fstream> // std::ifstream
 #include <algorithm> // std::find std::min
 #include <utility> // std::pair
-#include <algorithm> // std::sort
 #include <cmath> // std::ceil
 #include "./Arguments.h"
 #include "./Graph.h"
-#include "./Distance.h"
 #include "../helper/FileIOHelper.h"
 #include "../helper/mt19937ar.h"
 
@@ -279,80 +277,12 @@ Arguments::Arguments(vector<string>& stringArgs, vector<unsigned int>& integerAr
     init_genrand(this->SEED);
     this->V = Graph(this->TSP_INSTANCE_NAME);
     this->K = ArgumentsHelper::calcK_axisDivide(this->HMIN, this->HMAX);
-    this->setDistInfos();
     this->setPartitions();
   } else {
     cout << "Unexpected exception Occured in Arguments constructor" << endl;
     cout << "Terminate 2opt-RL" << endl;
     exit(1);
   }
-}
-
-/**
- * let A is distMatrix
- * let B is distOrder
- * let n is |V|
- * 
- * A[i][j] is dist(nodes[i],nodes[j])
- * i and j are in [0,n+1]
- * 
- * B[i][j] is an index of j-th closest node of nodes[i]
- * i is in [1,n]
- * j is in [0,n-1]
- * B[0] is a dummyVector whose contents are all -1
- */
-void Arguments::setDistInfos(){
-  int n = this->V.getN();
-  this->distMatrix.reserve(n+2);
-  this->distOrder.reserve(n+1);
-
-  vector<double> distMatrixColumn(n+2,0);
-  vector<int> distOrderColumn(n,-1);
-
-  pair<int,double> dummyPair(0,0.0);
-  vector< pair<int,double> > dummyVector(n, dummyPair);
-  int i=0;
-  int j=0;
-  double tmp_dist_ij = 0.0;
-
-  // i = 0
-  for(j=0;j<=n+1;j++){
-    distMatrixColumn[j] = dist(this->V.nodes[i], this->V.nodes[j]);
-  }
-  this->distMatrix.emplace_back(distMatrixColumn);
-  this->distOrder.emplace_back(distOrderColumn); // all -1
-
-  // i = 1 ~ n
-  for(i=1;i<=n;i++){
-    // j = 0
-    distMatrixColumn[0] = dist(this->V.nodes[i], this->V.nodes[0]);
-
-    // j = 1 ~ n
-    dummyVector.clear();
-    for(j=1;j<=n;j++){
-      tmp_dist_ij = dist(this->V.nodes[i],this->V.nodes[j]);
-      distMatrixColumn[j] = tmp_dist_ij;
-      dummyVector.emplace_back(make_pair(j,tmp_dist_ij));
-    }
-    sort(dummyVector.begin(),dummyVector.end(),ArgumentsHelper::compare);
-    for(int k=0;k<n;k++){
-      distOrderColumn[k] = dummyVector[k].first;
-    }
-
-    // j = n+1
-    distMatrixColumn[n+1] = dist(this->V.nodes[i], this->V.nodes[n+1]);
-
-    // push back
-    this->distMatrix.emplace_back(distMatrixColumn);
-    this->distOrder.emplace_back(distOrderColumn);
-  }
-
-  // i = n+1
-  i= n+1;
-  for(j=0;j<=n+1;j++){
-    distMatrixColumn[j] = dist(this->V.nodes[i], this->V.nodes[j]);
-  }
-  this->distMatrix.emplace_back(distMatrixColumn);
 }
 
 void Arguments::setPartitions(){

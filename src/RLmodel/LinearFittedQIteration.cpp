@@ -3,7 +3,6 @@
 #include "../model/Arguments.h"
 #include "../solver/initial_solution/GenerateInitialSolution.h"
 #include "../helper/RandVec.h"
-//#include "../helper/fitLinearQ.h"
 #include "../helper/fitLP.h"
 
 #include <ctime>
@@ -89,9 +88,7 @@ namespace LinQHelper {
     return rstVec;
   }
 
-//===================== in LinQ.Learn ==================================
-
-}
+} // end namespace LinQHelper
 
 //========= LinQ Member ==============================================
 LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){

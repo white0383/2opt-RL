@@ -979,7 +979,6 @@ CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: ../src/model/Arguments.cpp \
   ../src/model/Graph.h \
   ../src/model/Node.h \
   ../src/model/Graph.h \
-  ../src/model/Distance.h \
   ../src/helper/FileIOHelper.h \
   ../src/helper/mt19937ar.h
 
@@ -1153,6 +1152,7 @@ CMakeFiles/2opt_RL.dir/src/model/Graph.cpp.o: ../src/model/Graph.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/_types/_wctrans_t.h \
   ../src/model/Node.h \
+  ../src/model/Distance.h \
   ../src/helper/FileIOHelper.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/float.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include/float.h \
