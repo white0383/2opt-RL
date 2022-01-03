@@ -1,0 +1,31 @@
+    //test normal 2opt
+    string LOCAL_METHOD = "2OPT";
+    Arguments* tspArgs;
+    int expNum = 10;
+    map<string, double> timeMap;
+    for(auto TSPLIB:TSPLIB_instances){
+      argSTR[0] = TSPLIB;
+      tspArgs = new Arguments(argSTR,argINT,argREA);
+
+      time_t startT = clock();
+      double rst_time = 0;
+      for(int i=0;i<expNum;i++){
+        Tour initTour = generateInitialSolution(*tspArgs);
+        startT = clock();
+        Tour optTour = searchLocalOpt(tspArgs->V,LOCAL_METHOD,initTour);
+        rst_time += (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        initTour.setCost(tspArgs->V);
+        optTour.setCost(tspArgs->V);
+        initTour.printTour();
+        optTour.printTour();
+        cout << rst_time << endl;
+      }
+
+      timeMap.insert({TSPLIB,rst_time});
+      delete tspArgs;
+    }
+
+    for(auto m : timeMap){
+      cout << m.first << "\t : " << m.second << " sec" << endl;
+    }

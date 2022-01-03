@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cfloat> // DBL_MAX
+#include <algorithm> // std::iter_swap
 
 using namespace std;
 
@@ -73,7 +74,6 @@ namespace TourHelper{
 
     return rst_orders;
   }
-
 
 } // end namespace tourHelper
 
@@ -188,6 +188,10 @@ vector<int> Tour::getPiInv(){
   return this->pi_inv;
 }
 
+vector<int> Tour::getOrders(){
+  return TourHelper::convertPiToOrders(this->pi);
+}
+
 Node Tour::getPi_node(int order, const Graph& g){
   return g.nodes[this->pi[order]];
 }
@@ -218,4 +222,24 @@ void Tour::insert(int newNodeIndex, int i, const Graph& g){
 
   // change size
   this->size += 1;
+}
+
+void Tour::swap(int i, int j){
+  // exception check
+  if((i<1) || (i>this->size)){
+    cout << "ERROR : Tour.swap invalid i\n";
+    cout << "i : " << i << endl;
+    exit(1);
+  } else if((j<1) || (j>this->size)){
+    cout << "ERROR : Tour.swap invalid j\n";
+    cout << "j : " << j << endl;
+    exit(1);
+  }
+
+  iter_swap(this->pi.begin() + i, this->pi.begin() + j);
+  this->pi_inv[this->pi[i]] = i;
+  this->pi_inv[this->pi[j]] = j;
+
+  if(i == 1) this->pi[this->size + 1] = this->pi[i];
+  if(j == this->size) this->pi[0] = this->pi[j];
 }

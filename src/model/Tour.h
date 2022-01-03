@@ -59,7 +59,7 @@ class Tour{
      * 
      * Example)
      * Tour t1 = new Tour({1,4,2})
-     * t1.pi -> {1,4,2}
+     * t1.pi -> {2,1,4,2,1}
      */
     Tour(const vector<int> &orders, const Graph& g);
 
@@ -138,6 +138,8 @@ class Tour{
     int getPiInv(int index);
     vector<int> getPiInv();
 
+    vector<int> getOrders();
+
     /**
      * Return the "order"th visited city as Node
      * 
@@ -160,6 +162,27 @@ class Tour{
      */
 
     void insert(int newNodeIndex, int i, const Graph& g);
+
+    /**
+     * exchange pi[i] and pi[j] by iter_swap
+     * hold i < j
+     * i,j is in [1,n]
+     * 
+     * let a is pi[i] 
+     * let b is pi[j]
+     * then piInv[a] is i
+     * and  piInv[b] is j
+     * 
+     * after this,
+     * pi[i] is b
+     * pi[j] is a
+     * piInv[a] is j
+     * piInv[b] is i
+     * 
+     * when i == 1 then pi[n+1] is also b
+     * when j == n then pi[0] is also a
+     */
+    void swap(int i, int j);
 };
 
 #endif //TSP_TOUR_H

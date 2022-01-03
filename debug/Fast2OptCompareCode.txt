@@ -1,0 +1,57 @@
+    //compare two fast-2opt
+    Arguments* tspArgs;
+    int expNum = 1000;
+    map<string, double> timeMapOld;
+    map<string, double> timeMapNew;
+    map<string, int> winScoreMap; // how many times method1 (fastTwoOpt) won at score
+    map<string, int> winTimeMap; // how many times method1 (fastTwoOpt) won at computation time
+
+    for(auto TSPLIB:TSPLIB_instances){
+      argSTR[0] = TSPLIB;
+      argINT[6] += 1; // SEED += 1
+
+      tspArgs = new Arguments(argSTR,argINT,argREA);
+
+      time_t startT = clock();
+      double rst_time_old = 0;
+      double rst_time_new = 0;
+      int old_win_score = 0;
+      int old_win_time = 0; 
+      double spent_time_old = 0;
+      double spent_time_new = 0;
+      for(int i=0;i<expNum;i++){
+        argINT[6] += 1; // SEED += 1
+        Tour initTour = generateInitialSolution(*tspArgs);
+
+        startT = clock();
+        Tour optTourOld = fastTwoOpt(tspArgs->V,initTour);
+        spent_time_old = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        startT = clock();
+        Tour optTourNew = fastTwoOptTmp(tspArgs->V, initTour);
+        spent_time_new = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        optTourOld.setCost(tspArgs->V);
+        optTourNew.setCost(tspArgs->V);
+
+        rst_time_old += spent_time_old;
+        rst_time_new += spent_time_new;
+
+        if(spent_time_old < spent_time_new) old_win_time++;
+        if(optTourOld.getCost() < optTourNew.getCost()) old_win_score++;
+      }
+
+      timeMapOld.insert({TSPLIB,rst_time_old});
+      timeMapNew.insert({TSPLIB,rst_time_new});
+      winScoreMap.insert({TSPLIB,old_win_score});
+      winTimeMap.insert({TSPLIB,old_win_time});
+    }
+
+    for(auto TSPLIB : TSPLIB_instances){
+      cout << TSPLIB << "\t: ";
+      cout << timeMapOld.find(TSPLIB)->second << "\t ";
+      cout << timeMapNew.find(TSPLIB)->second << "\t ";
+      cout << winScoreMap.find(TSPLIB)->second << "\t ";
+      cout << winTimeMap.find(TSPLIB)->second << "\t ";
+      cout << endl;
+    }

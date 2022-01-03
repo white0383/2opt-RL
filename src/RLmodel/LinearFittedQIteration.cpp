@@ -20,42 +20,54 @@ namespace LinQHelper {
 //===================== in LinQ Constructor =============================
   /**
    * Generate weight vecotr which has random double-type values
-   * there values are included in [ (+-) tspArgs.WEIGHTINTERVAL/2]
+   * there values are included in [ (+-) tspArgs.THETA_INITPARA/2]
    */
-  vector<double> genRandomWeights_Uniform(const Arguments& tspArgs){
-    vector<double> rst_weights;
-    rst_weights.reserve(tspArgs.K + 1);
-    double weight =0.0;
+  vector<double> genRandomTheta_Uniform(const Arguments& tspArgs){
+    vector<double> rst_theta;
+    rst_theta.reserve(tspArgs.K + 1);
+    double theta =0.0;
     for(int i=0;i<tspArgs.K +1;i++){
-      weight = (genrand_real1()-0.5 ) * tspArgs.WEIGHTS_INITPARA;
-      rst_weights.push_back(weight);
+      theta = (genrand_real1()-0.5 ) * tspArgs.THETA_INITPARA;
+      rst_theta.push_back(theta);
     }
-    return rst_weights;
+    return rst_theta;
   }
 
   /**
    * Generate weight vecotr which has gaussian double-type values
-   * each of them are i.i.d of N(0,WEIGHTS_INITPARA)
+   * each of them are i.i.d of N(0,THETA_INITPARA)
    */
-  vector<double> genRandomWeights_Gaussian(const Arguments& tspArgs){
-    vector<double> rst_weights;
-    rst_weights.reserve(tspArgs.K + 1);
+  vector<double> genRandomTheta_Gaussian(const Arguments& tspArgs){
+    vector<double> rst_theta;
+    rst_theta.reserve(tspArgs.K + 1);
     // set gaussian RNG
     mt19937 gen(genrand_int32());
-    normal_distribution<double> gauss(0,tspArgs.WEIGHTS_INITPARA);
-    double weight =0.0;
+    normal_distribution<double> gauss(0,tspArgs.THETA_INITPARA);
+    double theta =0.0;
     for(int i=0;i<tspArgs.K +1;i++){
-      weight = gauss(gen);
-      rst_weights.push_back(weight);
+      theta = gauss(gen);
+      rst_theta.push_back(theta);
     }
-    return rst_weights;    
+    return rst_theta;    
   }
 
-  vector<double> genRandomWeights(const Arguments& tspArgs){
-    if(tspArgs.WEIGHT_INIT_METHOD == "UNIFM"){
-      return genRandomWeights_Uniform(tspArgs);
-    } else if (tspArgs.WEIGHT_INIT_METHOD == "GAUSS"){
-      return genRandomWeights_Gaussian(tspArgs);
+  /**
+   * Generate K+1 dimentional vector 
+   * whose every member is THETA_INITPARA
+   */
+  vector<double> genRandomTheta_One(const Arguments& tspArgs){
+    vector<double> rst_theta(tspArgs.K+1,tspArgs.THETA_INITPARA);
+
+    return rst_theta;
+  }
+
+  vector<double> genRandomTheta(const Arguments& tspArgs){
+    if(tspArgs.THETA_INIT_METHOD == "UNI"){
+      return genRandomTheta_Uniform(tspArgs);
+    } else if (tspArgs.THETA_INIT_METHOD == "GAU"){
+      return genRandomTheta_Gaussian(tspArgs);
+    } else if (tspArgs.THETA_INIT_METHOD == "ONE"){
+      return genRandomTheta_One(tspArgs);
     }
 
     // statements below are just for c++ grammar
@@ -71,28 +83,11 @@ namespace LinQHelper {
     return rstDeq;
   }
 
-  vector<unsigned int> genInitLastTimeNodeActioned(const Arguments& tspArgs){
-    vector<unsigned int> rstVec(tspArgs.V.getN() + 1);
-    return rstVec;
-  }
-
-  deque<double> genInitDistQueue(const Arguments& tspArgs){
-    deque<double> rstDeq;
-    // rstDeq = {+infinity} = {dist(pi_star_0)}
-    rstDeq.push_back(DBL_MAX); 
-    return rstDeq;
-  }
-
-  vector<int> genVsmp(const Arguments& tspArgs){
-    vector<int> rstVec = genRandDiffIntVecBySet(tspArgs.V.getN(), tspArgs.KSMP);
-    return rstVec;
-  }
-
 } // end namespace LinQHelper
 
 //========= LinQ Member ==============================================
 LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
-  this->weights = LinQHelper::genRandomWeights(tspArgs);
+  this->theta = LinQHelper::genRandomTheta(tspArgs);
   this->replayBuffer = LinQHelper::genInitReplayBuffer();
 
   this->startTimeT = clock();
@@ -105,43 +100,22 @@ LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
   this->epi = 1;
   this->MAXepi = tspArgs.EPI_LIMIT;
 
-  this->bestTime = 0;
-  this->bestDist = DBL_MAX;
-
-  this->lastTimeNodeActioned = LinQHelper::genInitLastTimeNodeActioned(tspArgs);
-  this->distQueue = LinQHelper::genInitDistQueue(tspArgs);
-  this->V_smp = LinQHelper::genVsmp(tspArgs);
-};
+  this->s_now = generateInitialSolution(tspArgs);
+  s_now.setCost(tspArgs.V);
+  this->bestTour = this->s_now;
+}
 
 void LinearFittedQIteration::learn(const Arguments& tspArgs){
   //cout << "===== Learning start =====" << endl;
 
-  // TMP
-  //this->printWeights();
-
-  Tour pi_init = generateInitialSolution(tspArgs);
-  pi_init.setScaledCost(tspArgs.V);
-  State s_prev = State(pi_init,tspArgs);
-  this->distQueue.push_back(s_prev.distPiStar);
-  this->bestTour = s_prev.pi_star;
-
   while(LinearFittedQIteration::checkTerminationCondition(tspArgs) == false){
-    for(this->step = 1;this->step <= this->MAXstep;this->step++){
-      Action a_prev = Action(s_prev, *this, tspArgs);
-      State s_next = State(s_prev, a_prev, *this,tspArgs);
-      double r_prev = MDPHelper::getReward(s_next,*this,tspArgs);
-      vector<double> f_prev = MDPHelper::getFeatureVector(s_prev, a_prev, *this, tspArgs);
-      MDP mdp_prev = MDP(s_prev, s_next, a_prev, r_prev, f_prev, *this);
-      this->updateInfo(mdp_prev, s_prev, s_next, tspArgs);
-    }
-    DataSet dataset = DataSet(tspArgs, *this);
-    // tmp
-    //dataset.printInfo();
-    if(this->epi < 5 || this->epi > 45)this->updateWeights(dataset);
-    //cout << "Finish epi " << this->epi << endl;
-    this->epi++;
-
-    this->printWeights();
+    //pair<int,int> a_now = LinQHelper::searchAction(s_now, *this, tspArgs);
+    pair<int,int> a_now = this->searchAction(tspArgs); // search 2-opt neib.
+    Tour s_next = this->transit(a_now,tspArgs); // 2-opt-move
+    double r_now = this->calcReward(s_next,tspArgs);
+    vector<double> f_now = this->calcFeatureVector(a_now,tspArgs);
+    MDP mdp_now = MDP(a_now,r_now,f_now,*this);
+    this->update(/* something */);
   }
 
   //cout << "Learning finish" << endl;
@@ -206,13 +180,6 @@ void LinearFittedQIteration::updateBestInfos(State& s_prev){
     this->bestDist = dist_piStar_prev;
     this->bestTime = this->time;
     this->bestTour = s_prev.pi_star;
-  }
-}
-
-void LinearFittedQIteration::updateDistQueue(double dist_piStar_next, const Arguments& tspArgs){
-  this->distQueue.push_back(dist_piStar_next);
-  if(this->distQueue.size() > tspArgs.THETA){
-    this->distQueue.pop_front();
   }
 }
 

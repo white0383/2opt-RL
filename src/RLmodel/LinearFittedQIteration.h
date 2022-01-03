@@ -7,17 +7,16 @@
 #include <utility> // std::pair
 #include "../model/Arguments.h"
 #include "../model/Tour.h"
-#include "MarkovDecisionProcess.h"
 
 class LinearFittedQIteration{
   public:
-    vector<double> theta;
-    deque<MDP> replayBuffer;
+    vector<double> theta; // weight vector in Qfunction
+    deque<MDP> replayBuffer; // save MMAX recent MDPs
     
     // real world's computation time
     time_t startTimeT;
     double spendSec;
-    double MAXspendSec; // const
+    double MAXspendSec; // const SEC_LIMIT in tspArgs
 
     /**
      * Initial time
@@ -31,18 +30,20 @@ class LinearFittedQIteration{
      *     epi : 1 1 1 2 2 2 3 3 3  4  4  4 
      */
     unsigned int time;
-    //unsigned int MAXtime = +infinity
+    //  unsigned int MAXtime = +infinity
     unsigned int step;
-    unsigned int MAXstep; // const
+    unsigned int MAXstep; // const TMAX in tspArgs
     unsigned int epi; 
-    unsigned int MAXepi; // const
+    unsigned int MAXepi; // const EPI_LIMIT in tspArgs
 
-    //For calculating feature vector and reward
-    unsigned int bestTime;
-    double bestDist;
+    // Focusing Tour : State of now
+    Tour s_now;
+
+    //For calculating reward
     Tour bestTour;
 
   public:
+    // constructor
     LinearFittedQIteration(const Arguments& tspArgs);
 
     /**
@@ -57,35 +58,26 @@ class LinearFittedQIteration{
     bool checkTerminationCondition(const Arguments& tspArgs);   
 
     /**
+     * 
+     */
+    pair<int,int> searchAction(const Arguments& tspArgs);
+
+    /**
      * finish a time step, and update model's internal infomation
      * 
      * 1. update replayBuffer
-     * 2. update Tau (LastTimeNodeActioned)
-     * 3. update bestInfos
-     * 4. update distQ
-     * 5. s_prev = s_next
-     * 6. this->time ++
+     * 2. update bestInfos
+     * 3. s_prev = s_next
+     * 4. this->time ++
      */
-    void updateInfo(MDP& mdp, State& s_prev, State& s_next, const Arguments& tspArgs);
+    //void update(???);
 
 
     /**
      * Push_back prevMDP into ReplayBuffer
      * and pop_front if its size is bigger than MMAX
      */
-    void updateReplayBuffer(MDP& prevMDP,const Arguments& tspArgs);
-
-    /**
-     * Update lastTimeNodeActioned by current action
-     * 
-     * let current action is {sigma, {pair_i (i = 1 ~ sigma)}}
-     * let pair_i is (p_i, q_i) 
-     * let lastTimeNodeAcitoned is called as Tau
-     * 
-     * then, for every i = 1 ~ sigma,
-     *    Tau[p_i], Tau[q_i] = time
-     */
-    void updateLastTimeNodeActioned(Action& a_prev);
+    //void updateReplayBuffer(MDP& prevMDP,const Arguments& tspArgs);
 
     /**
      * Update bestTime and bestDist
@@ -96,26 +88,18 @@ class LinearFittedQIteration{
      * then bestDist = dist_prev 
      * and bestTime = time
      */
-    void updateBestInfos(State& s_prev);
+    //void updateBestInfos(State& s_prev);
 
-    /**
-     * let input double number as dist_next
-     * 
-     * push_back dist_next into distQueue
-     * and pop_front if its size is bigger thand THETA
-     */
-    void updateDistQueue(double dist_piStar_next, const Arguments& tspArgs);
-    
     /**
      * update weights vector using least square method
      */
-    void updateWeights(DataSet& dataSet);
+    //void updateTheta(DataSet& dataSet);
 
     // Getter
-    vector<double> getWeights();
+    //vector<double> getTheta();
 
     //For Debugging
-    void printWeights();
+    //void printTheta();
 };
 
 
@@ -134,7 +118,7 @@ class DataSet{
      * let w is (K+1) dimention vector (called weight vector)
      * 
      * then, model try to find w, w0 which minimize below value
-     *  LSM := l2norm(y - (Xw))
+     *  LSM := l1norm(y - (Xw))
      */
     vector<double> targetValues; // target values for model regression
     vector< vector<double> > featureVectors; // model's input data
@@ -146,6 +130,20 @@ class DataSet{
   // for Debugging
   public:
     void printInfo();
+};
+
+class MDP{
+  public:
+    unsigned int time;
+    unsigned int epi;
+    unsigned int step;
+    Tour state;
+    pair<int,int> action;
+    double reward;
+    vector<double> featureVector;
+  
+  public:
+    MDP(Tour& s, pair<int,int>& a, double r, vector<double>& f, LinearFittedQIteration& LinQ);
 };
 
 

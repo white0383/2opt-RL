@@ -1,5 +1,5 @@
-#ifndef TSP_FAST2OPT_H
-#define TSP_FAST2OPT_H
+#ifndef TSP_FAST2OPTTMP_H
+#define TSP_FAST2OPTTMP_H
 
 #include "../../../model/Tour.h"
 #include "../../../model/Graph.h"
@@ -14,6 +14,6 @@
  * @param Tour pi : initial solution of TSP 
  * @return Tour solution_star : complete Tour of g
  */
-Tour fastTwoOpt(const Graph& g, Tour& pi);
+Tour fastTwoOptTmp(const Graph& g, Tour& pi);
 
-#endif // TSP_FAST2OPT_H
+#endif // TSP_FAST2OPTTMP_H

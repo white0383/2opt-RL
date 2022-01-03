@@ -16,6 +16,4 @@
  */
 Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi);
 
-Tour searchLocalOpt(const Arguments& tspArgs, Tour& pi);
-
 #endif //TSP_SEARCHLOCALOPT_H

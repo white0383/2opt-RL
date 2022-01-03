@@ -12,6 +12,10 @@
 #include <ctime>
 #include "./model/Tour.h"
 #include "./solver/initial_solution/GenerateInitialSolution.h"
+#include "./solver/local_search/SearchLocalOpt.h"
+#include "./solver/local_search/method/TwoOpt.h"
+#include "./solver/local_search/method/FastTwoOpt.h"
+#include "./solver/local_search/method/tmp.h"
 
 using namespace std;
 
@@ -48,9 +52,9 @@ int main(){
   /**** Set your test config here. ****/
   /************************************/
   //**** Methods
-  vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299","u1060" };
+  vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299"};
   vector<string> VLSI_instances = {"xqf131", "xqg237", "pma343","xql662"};
-  string tourInitMethod = "FI"; // RT FI
+  string tourInitMethod = "RT"; // RT FI
   string learnTermiCondi = "EPI"; // EPI SEC
   string thetaInitMethod = "UNI"; // UNI GAU ONE
 
@@ -74,12 +78,88 @@ int main(){
 
   /* use below while implementation */
   /*********************************/
-  //"ArgumentsDebug" 
-  vector<string> argSTR = {TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+  //"ArgumentsDebug" TSPLIB_instances[0]
+  vector<string> argSTR = { TSPLIB_instances[4], tourInitMethod, learnTermiCondi, thetaInitMethod};
   vector<unsigned int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
   vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
-  Arguments tspArgs = Arguments(argSTR, argINT, argREA);
+  //Arguments tspArgs = Arguments(argSTR, argINT, argREA);
+
+    //test normal 2opt
+    string LOCAL_METHOD = "2OPT";
+    //Tour initTour = generateInitialSolution(tspArgs);
+    //Tour optTour = searchLocalOpt(tspArgs.V,LOCAL_METHOD,initTour);
+
+
+    //test fast 2opt
+    //LOCAL_METHOD = "F2OPT";
+    //Tour initTour = generateInitialSolution(tspArgs);
+    //Tour optTour = fastTwoOpt(tspArgs.V,initTour);
+    //Tour optTourTmp = fastTwoOptTmp(tspArgs.V,initTour);
+    //initTour.setCost(tspArgs.V);
+    //optTour.setCost(tspArgs.V);
+    //optTourTmp.setCost(tspArgs.V);
+    //initTour.printTour();
+    //optTour.printTour();
+    //optTourTmp.printTour();
+    
+    //compare fast-2opt and normal-2opt
+    Arguments* tspArgs;
+    int expNum = 1000;
+    map<string, double> timeMapFast;
+    map<string, double> timeMapNorm;
+    map<string, int> winFastScoreMap; // how many times fastTwoOpt won at score
+    map<string, int> winFastTimeMap; // how many times fastTwoOpt won at computation time
+
+    for(auto TSPLIB:TSPLIB_instances){
+      argSTR[0] = TSPLIB;
+      argINT[6] += 1; // SEED += 1
+
+      tspArgs = new Arguments(argSTR,argINT,argREA);
+
+      time_t startT = clock();
+      double rst_time_norm = 0;
+      double rst_time_fast = 0;
+      int fast_win_score = 0;
+      int fast_win_time = 0; 
+      double spent_time_norm = 0;
+      double spent_time_fast = 0;
+      for(int i=0;i<expNum;i++){
+        argINT[6] += 1; // SEED += 1
+        Tour initTour = generateInitialSolution(*tspArgs);
+
+        startT = clock();
+        Tour optTourFast = fastTwoOpt(tspArgs->V,initTour);
+        spent_time_fast = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        startT = clock();
+        Tour optTourNorm = twoOpt(tspArgs->V,initTour);
+        spent_time_norm = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        optTourFast.setCost(tspArgs->V);
+        optTourNorm.setCost(tspArgs->V);
+
+        rst_time_fast += spent_time_fast;
+        rst_time_norm += spent_time_norm;
+
+        if(spent_time_fast < spent_time_norm) fast_win_time++;
+        if(optTourFast.getCost() < optTourNorm.getCost()) fast_win_score++;
+      }
+
+      timeMapFast.insert({TSPLIB,rst_time_fast});
+      timeMapNorm.insert({TSPLIB,rst_time_norm});
+      winFastScoreMap.insert({TSPLIB,fast_win_score});
+      winFastTimeMap.insert({TSPLIB,fast_win_time});
+    }
+
+    for(auto TSPLIB : TSPLIB_instances){
+      cout << TSPLIB << "\t: ";
+      cout << timeMapFast.find(TSPLIB)->second << "\t ";
+      cout << timeMapNorm.find(TSPLIB)->second << "\t ";
+      cout << winFastScoreMap.find(TSPLIB)->second << "\t ";
+      cout << winFastTimeMap.find(TSPLIB)->second << "\t ";
+      cout << endl;
+    }
 
   //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
   //LinQ.learn(tspArgs);

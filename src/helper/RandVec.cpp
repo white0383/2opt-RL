@@ -7,6 +7,9 @@
 #include "./mt19937ar.h"
 #include "./RandVec.h"
 
+//debug
+#include <iostream>
+
 using namespace std;
 
 vector<int> genRandDiffIntVec(int min, int max, int num){
@@ -35,6 +38,28 @@ vector<int> genRandDiffIntVec(int min, int max, int num){
 
 vector<int> genRandDiffIntVec(int n, int m){
   return genRandDiffIntVec(1,n,m);
+}
+
+vector<int> genRandIntVec(int min, int max){
+  //Exception check
+  if(min <= 0){
+    cout << "ERROR : genRandDiffIntVec : min is not positive" << endl;
+    exit(1);
+  } else if (min > max){
+    cout << "ERROR : genRandDiffIntVec : min is bigger than max" << endl;
+    exit(1);
+  }
+
+  vector<int> rst_vec(max - min + 1);
+  iota(rst_vec.begin(),rst_vec.end(), min);
+  mt19937 mtRand(genrand_int32());
+  shuffle(rst_vec.begin(),rst_vec.end(),mtRand);  
+
+  return rst_vec;
+}
+
+vector<int> genRandIntVec(int n){
+  return genRandIntVec(1,n);
 }
 
 vector<int> genRandDiffIntVecBySet(int min, int max, int num){

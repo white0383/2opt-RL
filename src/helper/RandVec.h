@@ -8,6 +8,11 @@ vector<int> genRandDiffIntVec(int min, int max, int num);
 // Generate vector has random m different members in [1,n]
 vector<int> genRandDiffIntVec(int n, int m);
 
+// Generate shuffled [min,max]
+vector<int> genRandIntVec(int min, int max);
+// Generate shuffled [1,n]
+vector<int> genRandIntVec(int n);
+
 /**
  * Generate "num" random different elements in [min, max] as vector
  * It is used when (max - min + 1) is very very bigger than num

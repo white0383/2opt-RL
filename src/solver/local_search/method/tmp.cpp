@@ -4,24 +4,26 @@
 #include <cstdlib> // abs(int num)
 #include <float.h> // DBL_MAX
 
-#include "FastTwoOpt.h"
+#include "tmp.h"
 #include "../../../helper/RandVec.h"
 
 using namespace std;
 
 #include <string>
 #include <ctime>
-void echo(string msg){
-  cout << msg << endl;
-}
-void echo(vector<int> vec){
-  for(auto foo:vec) cout << foo << " ";
-  cout << endl;
-}
+//void echo(string msg){
+//  cout << msg << endl;
+//}
+//void echo(vector<int> vec){
+//  for(auto foo:vec) cout << foo << " ";
+//  cout << endl;
+//}
 
-namespace FastTwoOptHelper{
-  bool isAdjacent(int i, int j, int n){
-    return (abs(i-j) == 1) || (abs(i-j) == n-1);
+namespace FastTwoOptTmpHelper{
+  bool isInvalid(int i, int j, int n){
+    if(j <= i+1) return true;
+    if((i==1) && (j==n)) return true;
+    return false;
   }
 
   /**
@@ -39,22 +41,16 @@ namespace FastTwoOptHelper{
   }
 
   void swapTwoOpt(Tour& pi,int i,int j){
-    if(j == 0) j = pi.getSize(); // hold j > i
+    do{
+      pi.swap(i+1,j);
 
-    if(i > j){ // hold j > i
-      swapTwoOpt(pi,j,i);
-    } else {
-      do{
-        pi.swap(i+1,j);
-
-        i++;
-        j--;
-      }while(j - i > 0);
-    }
+      i++;
+      j--;
+    }while(j - i > 0);
   }
 }
 
-Tour fastTwoOpt(const Graph& g, Tour& pi){
+Tour fastTwoOptTmp(const Graph& g, Tour& pi){
   Tour pi_star = pi;
   int n = pi_star.getSize();
   bool improved = true;
@@ -63,7 +59,7 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
     // reset "improved"
     improved = false;
 
-    vector<int> i_vec = genRandIntVec(n);
+    vector<int> i_vec = genRandIntVec(n-2);
 
     int i,j,p,pp,q,qp;
     // after minus before
@@ -80,16 +76,16 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
         qp = pi_star.getPi(j+1);
 
         if(q == pp) break; // for C
-        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for C
+        if(FastTwoOptTmpHelper::isInvalid(i,j,n)) continue; // for C
 
-        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,g);
+        amb = FastTwoOptTmpHelper::getAfterMinusBefore(p,pp,q,qp,g);
         if(amb < 0){
           //cout << amb << " "<< i << ", "<<j<<endl;
           
           //cout << "before" << endl;
           //echo(pi_star.getPi());
           //echo(pi_star.getPiInv());
-          FastTwoOptHelper::swapTwoOpt(pi_star,i,j);
+          FastTwoOptTmpHelper::swapTwoOpt(pi_star,i,j);
           //cout << "after" << endl;
           //echo(pi_star.getPi());
           //echo(pi_star.getPiInv());
@@ -107,16 +103,16 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
         q = pi_star.getPi(j);
 
         if(qp == p) break; // for Cp
-        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for Cp
+        if(FastTwoOptTmpHelper::isInvalid(i,j,n)) continue; // for Cp
 
-        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,g);
+        amb = FastTwoOptTmpHelper::getAfterMinusBefore(p,pp,q,qp,g);
         if(amb < 0){
           //cout << amb << " "<< i << ", "<<j<<endl;
           
           //cout << "before" << endl;
           //echo(pi_star.getPi());
           //echo(pi_star.getPiInv());
-          FastTwoOptHelper::swapTwoOpt(pi_star,i,j);
+          FastTwoOptTmpHelper::swapTwoOpt(pi_star,i,j);
           //cout << "after" << endl;
           //echo(pi_star.getPi());
           //echo(pi_star.getPiInv());

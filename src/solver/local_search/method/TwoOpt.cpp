@@ -1,110 +1,129 @@
 #include <iostream>
 #include <vector>
 #include <cfloat> // DBL_MAX
+#include <algorithm> // std::iter_swap
 
 #include "TwoOpt.h"
 #include "../../../model/Distance.h"
 #include "../../../model/Node.h"
+#include "../../../helper/RandVec.h"
 
 using namespace std;
-/**
- * 2-opt is like below : (i) represent ith node on tour
- * 
- * -> (i-1) ->   <- (j) <-     swap    -> (i-1) -> (j) -> 
- *             ×               ===>
- * <- (j+1) <-   -> (i) ->             <- (j+1) <- (i) <-
- * 
- * dist(a,b) represent distance between ath node and bth node on tour.
- * Swap occurs when dist(i-1, i) + dist(j, j+1) > dist(i-1,j) + dist(i,j+1)
- * 
- * To make nodes name simple,
- * (i-1) is node A
- * (i)   is node B
- * (j)   is node C
- * (j+1) is node D
- * And
- * Swap when dist(A,B) + dist(C,D) > dist(A,C) + dist(B,D)
- */
-bool isNewTourShorter(vector<int> pi, const Graph& g, int i, int j){
-  // node's index is always 1 smaller than city's index
-  int tmpN = g.getN();
-  Node A = g.nodes.at(pi[i-1]);
-  Node B = g.nodes.at(pi[i]);
-  Node C = g.nodes.at(pi[j]);
-  Node D = g.nodes.at(pi[(j+1) % tmpN]);
 
-  double distBeforeSwap = dist(A,B) + dist(C,D);
-  double distAfterSwap = dist(A,C) + dist(B,D);
-  
-  if(distBeforeSwap > distAfterSwap){
-    return true;
-  }else{
-    return false;
-  }
-}
+namespace TwoOptHelper{
+  /**
+   * 2-opt is like below : (i) represent ith node on tour
+   * 
+   * ->  (i)  ->   <-  (j)  <-    swap     ->  (i)  ->  (j)  -> 
+   *             ×                ===>
+   * <- (j+1) <-   -> (i+1) ->             <- (j+1) <- (i+1) <-
+   * 
+   * dist(a,b) represent distance between ath node and bth node on tour.
+   * Swap occurs when dist(i, i+1) + dist(j, j+1) > dist(i,j) + dist(i+1,j+1)
+   * 
+   * To make nodes name simple,
+   * (i)   is node A
+   * (i+1) is node B
+   * (j)   is node C
+   * (j+1) is node D
+   * And
+   * Swap when dist(A,B) + dist(C,D) > dist(A,C) + dist(B,D)
+   */
+  bool isNewTourShorter(vector<int> pi_orders, const Graph& g, int i, int j){
+    // ith element in original pi is equal to pi_orders[i-1]
+    int A = pi_orders[(i)   -1];
+    int B = pi_orders[(i+1) -1];
+    int C = pi_orders[(j)   -1];
+    int D = pi_orders[((j+1) -1) % pi_orders.size()];
 
-/**
- * "Swap" operator in 2-opt is like below (https://en.wikipedia.org/wiki/2-opt)
- * 
- *  input vector pi, int i and j
- *        (a) represent pi[a]
- *  1. take (start) to (i-1) and add them in order to new_pi
- *  2. take (i) to (j) and add them in reverse order to new_pi
- *  3. take (j+1) to (end) and add them in order to new_pi
- *  return new_pi
- */
-vector<int> swapTwoOpt(vector<int> pi, int i, int j){
-  vector<int> new_pi;
-  int cityNum = pi.size();
-  new_pi.reserve(cityNum);
-
-  int it;
-  int reverse_it;
-  for(it = 0; it<i;it++){
-    new_pi.push_back(pi[it]);
+    double distBeforeSwap = g.distMatrix[A][B] + g.distMatrix[C][D];
+    double distAfterSwap = g.distMatrix[A][C] + g.distMatrix[B][D];
+    
+    return distBeforeSwap > distAfterSwap;
   }
 
   /**
-   * map it to reverse_it = f(it)
+   * "Swap" operator in 2-opt is like below (https://en.wikipedia.org/wiki/2-opt)
    * 
-   * it    : i, i+1, i+2, ... , j-1, j
-   * r_it  : j, j-1, ..., i+2, i+1, i
-   * 
-   * then f(it) = j - (it - i)
+   *  input vector pi, int i and j
+   *        (a) represent pi[a]
+   *  1. take (start) to (i-1) and add them in order to new_pi
+   *  2. take (i) to (j) and add them in reverse order to new_pi
+   *  3. take (j+1) to (end) and add them in order to new_pi
+   *  return new_pi
    */
-  for(it = i; it<j+1;it++){
-    reverse_it = j - (it - i);
-    new_pi.push_back(pi[reverse_it]);
-  }
+  void swapTwoOpt(vector<int>& pi, int i, int j){
+    vector<int>::iterator ite_head = pi.begin() + i;
+    vector<int>::iterator ite_tail = pi.begin() + j - 1;
 
-  for(it = j+1; it<cityNum; it++){
-    new_pi.push_back(pi[it]);
-  }
-  return new_pi;
-}
+    do{
+      iter_swap(ite_head,ite_tail);
 
+      ite_head++;
+      ite_tail--;
+    }while(ite_tail - ite_head > 0);
+  }
+} // end namespace TwoOptHelper
+
+/* method 1 : in order
 Tour twoOpt(const Graph& g, Tour& pi){
-  vector<int> pi_order = pi.getTour();
-  int cityNum = pi.getSize();
+  vector<int> pi_orders = pi.getOrders();
+  int n = pi.getSize();
   bool improved = true;
 
   while(improved){
     improved = false;
-    for(int i=1; i < cityNum-1 ; i++){
-      for(int j=i+2; j < cityNum ; j++){
+    for(int i=1;i<= n-2;i++){
+      for(int j=i+2;j<=n;j++){
         //exception handling. adjacent edge
-        if((i == 1) && (j == cityNum-1)) continue;
+        if((i == 1) && (j == n)) continue;
 
-        if(isNewTourShorter(pi_order, g, i ,j)) {
-          pi_order = swapTwoOpt(pi_order, i, j);
+        if(TwoOptHelper::isNewTourShorter(pi_orders, g, i ,j)) {
+          TwoOptHelper::swapTwoOpt(pi_orders, i, j);
           improved = true;
-        }
+          break;
+        } // end if
+      } // end for j
+      if(improved){ // break for i
+        break;
       }
-    }
-  }
+    } // end for i
+  } // end while
   
-  Tour pi_star(pi_order,g);
-  pi_star.setThisIsLocalOpt();
+  Tour pi_star(pi_orders,g);
+  cout << "done" << endl;
+  return pi_star;
+}
+*/
+
+/* method 2 : random */
+Tour twoOpt(const Graph& g, Tour& pi){
+  vector<int> pi_orders = pi.getOrders();
+  int n = pi.getSize();
+  bool improved = true;
+
+  while(improved){
+    improved = false;
+    vector<int> i_vec = genRandIntVec(n-2);  
+    for(int i : i_vec){
+      vector<int> j_vec = genRandIntVec(i+2,n);
+      for(int j : j_vec){
+        //exception handling. adjacent edge
+        if((i == 1) && (j == n)) continue;
+
+        if(TwoOptHelper::isNewTourShorter(pi_orders, g, i ,j)) {
+          TwoOptHelper::swapTwoOpt(pi_orders, i, j);
+          improved = true;
+          break;
+        } // end if
+      } // end for j
+      if(improved){ // break for i
+        break;
+      }
+    } // end for i
+  } // end while
+  
+  Tour pi_star(pi_orders,g);
 
   return pi_star;
 }

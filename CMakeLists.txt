@@ -52,20 +52,18 @@ add_executable(${PROJECT_NAME}
   ./src/model/Tour.cpp
   ./src/model/Arguments.cpp
   #./src/RLmodel/LinearFittedQIteration.cpp
-  #./src/RLmodel/MarkovDecisionProcess.cpp
   ./src/helper/FileIOHelper.cpp
   ./src/helper/mt19937ar.cpp
   ./src/helper/RandVec.cpp
-  #./src/helper/fitLinearQ.cpp
   #./src/helper/fitLP.cpp
   ./src/solver/initial_solution/GenerateInitialSolution.cpp
   ./src/solver/initial_solution/method/RandomTour.cpp
   ./src/solver/initial_solution/method/NearestNeighbor.cpp
   ./src/solver/initial_solution/method/FarthestInsertion.cpp
-  #./src/solver/local_search/SearchLocalOpt.cpp
-  #./src/solver/local_search/method/TwoOpt.cpp
-  #./src/solver/local_search/method/FastTwoOpt.cpp
-  #./src/solver/local_search/method/ScaledFastTwoOpt.cpp
+  ./src/solver/local_search/SearchLocalOpt.cpp
+  ./src/solver/local_search/method/TwoOpt.cpp
+  ./src/solver/local_search/method/FastTwoOpt.cpp
+  ./src/solver/local_search/method/tmp.cpp
 )
 
 target_include_directories(${PROJECT_NAME} 
