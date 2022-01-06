@@ -8,6 +8,9 @@
 #include "../model/Arguments.h"
 #include "../model/Tour.h"
 
+class MDP;
+class DataSet;
+
 class LinearFittedQIteration{
   public:
     vector<double> theta; // weight vector in Qfunction

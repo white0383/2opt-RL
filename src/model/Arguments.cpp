@@ -280,9 +280,9 @@ Arguments::Arguments(vector<string>& stringArgs, vector<int>& integerArgs, vecto
     init_genrand(this->SEED);
     this->V = Graph(this->TSP_INSTANCE_NAME);
     this->K0 = ArgumentsHelper::calcK0_axisDivide(this->HMIN, this->HMAX);
-    this->K = 1 + 2*this->K0;
-    this->StateBegin = 1;
-    this->ActionBegin = K0 + 1;
+    this->K = 2*this->K0;
+    this->StateBegin = 0;
+    this->ActionBegin = K0;
     this->setPartitions();
     this->setPartitionBegins();
     this->setU();

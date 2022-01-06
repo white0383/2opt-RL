@@ -100,6 +100,11 @@ class Tour{
     void setCost(const Graph &g);
 
     /**
+     * set Cost directly
+     */
+    void setCost(double newCost);
+
+    /**
      * Get size of this tour object
      * 
      * @return this->size

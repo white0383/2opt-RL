@@ -146,6 +146,10 @@ void Tour::setCost(const Graph &g) {
   this->cost = cost;
 };
 
+void Tour::setCost(double newCost){
+  this->cost = newCost;
+}
+
 int Tour::getSize() {
   return this->size;
 }
