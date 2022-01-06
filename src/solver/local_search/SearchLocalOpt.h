@@ -15,5 +15,6 @@
  * @return Tour : Local opt in the neighborhood of "solution"
  */
 Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi);
+Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi, double p);
 
 #endif //TSP_SEARCHLOCALOPT_H

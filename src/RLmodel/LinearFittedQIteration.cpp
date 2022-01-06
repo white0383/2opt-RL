@@ -2,6 +2,7 @@
 #include "../helper/mt19937ar.h"
 #include "../model/Arguments.h"
 #include "../solver/initial_solution/GenerateInitialSolution.h"
+#include "../solver/local_search/method/FastTwoOpt.h"
 #include "../helper/RandVec.h"
 #include "../helper/fitLP.h"
 
@@ -11,6 +12,7 @@
 #include <cfloat> // DBL_MAX
 #include <iostream>
 #include <random> // mt19937, normal_distribution
+#include <cmath> // pow
 
 using namespace std;
 
@@ -69,18 +71,19 @@ namespace LinQHelper {
     } else if (tspArgs.THETA_INIT_METHOD == "ONE"){
       return genRandomTheta_One(tspArgs);
     }
-
-    // statements below are just for c++ grammar
-    // Only when Acguments' initialization has problem, 
-    // below statement will run.
-    vector<double> rst_dummy;
-    cout << "ERROR : reinLearnMemoryHelper::genRandomWeights invalid Arguments' WEIGHT_INIT_METHOD" << endl;
-    return rst_dummy;   
   }; 
 
   deque<MDP> genInitReplayBuffer(){
     deque<MDP> rstDeq;
     return rstDeq;
+  }
+
+  int getEdgeIndexInPartition(int a, int b, int h){
+    if( b < a ){
+      return getEdgeIndexInPartition(b,a,h);
+    }
+
+    return (a-1)*(2*h*h - a)/2 + (b-1);
   }
 
 } // end namespace LinQHelper
@@ -100,64 +103,319 @@ LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
   this->epi = 1;
   this->MAXepi = tspArgs.EPI_LIMIT;
 
-  this->s_now = generateInitialSolution(tspArgs);
-  s_now.setCost(tspArgs.V);
+  LinearFittedQIteration::resetState(tspArgs);
   this->bestTour = this->s_now;
+
+  this->tourLengthChange = 0;
 }
 
 void LinearFittedQIteration::learn(const Arguments& tspArgs){
   //cout << "===== Learning start =====" << endl;
 
   while(LinearFittedQIteration::checkTerminationCondition(tspArgs) == false){
-    //pair<int,int> a_now = LinQHelper::searchAction(s_now, *this, tspArgs);
     pair<int,int> a_now = this->searchAction(tspArgs); // search 2-opt neib.
-    Tour s_next = this->transit(a_now,tspArgs); // 2-opt-move
-    double r_now = this->calcReward(s_next,tspArgs);
-    vector<double> f_now = this->calcFeatureVector(a_now,tspArgs);
-    MDP mdp_now = MDP(a_now,r_now,f_now,*this);
-    this->update(/* something */);
+    double r_now = this->calcReward(tspArgs);
+    MDP mdp_now = MDP(a_now,r_now,*this);
+    this->update(a_now,mdp_now,tspArgs);
   }
 
   //cout << "Learning finish" << endl;
 }
 
 bool LinearFittedQIteration::checkTerminationCondition(const Arguments& tspArgs){
-  if(tspArgs.TERMINATE_METHOD == "EPI"){
+  if(tspArgs.LEARN_TERMINATE_METHOD == "EPI"){
     return (this->epi > this->MAXepi);
-  }else if(tspArgs.TERMINATE_METHOD == "SEC"){
+  }else if(tspArgs.LEARN_TERMINATE_METHOD == "SEC"){
     return (this->spendSec > this->MAXspendSec);
+  } 
+}
+
+pair<int,int> LinearFittedQIteration::searchAction(const Arguments& tspArgs){
+  double pr = genrand_real3();
+  pair<int,int> rst_actionIJ;
+  if(pr < tspArgs.GREEDY_EPS){
+    rst_actionIJ = this->searchActionRandom(tspArgs);
+  } else {
+    rst_actionIJ = this->searchActionGreedy(tspArgs);
   }
 
-  // statements below are just for c++ grammar
-  // Only when Acguments' initialization has problem, 
-  // below statement will run.
-  cout << "Error : ReinLearnMemory::checkTerminationCondition invalid termination condition " << endl;
-  cout << "Your input TERMINATE_METHOD is \"" << tspArgs.TERMINATE_METHOD <<"\""<< endl;
-  exit(1);    
+  if(rst_actionIJ.first > rst_actionIJ.second){ // when i > j
+    int cp_i = rst_actionIJ.first;
+    int cp_j = rst_actionIJ.second;
+    rst_actionIJ = make_pair(cp_j, cp_i); // make first < second
+  }
+  
+  this->setFeatureVector_action(rst_actionIJ,tspArgs);
+
+  return rst_actionIJ;
 }
 
-void LinearFittedQIteration::updateInfo(MDP& mdp, State& s_prev, State& s_next, const Arguments& tspArgs){
-  // update replayBuffer
-  this->updateReplayBuffer(mdp, tspArgs);
+// Like first improvement
+pair<int,int> LinearFittedQIteration::searchActionRandom(const Arguments& tspArgs){
+  int n = this->s_now.getSize();
+  bool improved = true;
+  double amb = 0;
+  int i,j,p,pp,q,qp;
+  pair<int,int> rst_IJ;
 
-  // update lastTimeNodeActioned
-  this->updateLastTimeNodeActioned(mdp.a_prev);
+  while(improved){
+    improved = false;
+    vector<int> i_vec = genRandIntVec(n);
+
+    for(int i : i_vec){
+      p = this->s_now.getPi(i);
+      pp = this->s_now.getPi(i+1);
+
+      for(int C = 1; C<n ; C++){
+        q = tspArgs.V.distOrder[p][C];
+        j = this->s_now.getPiInv(q);
+        qp = this->s_now.getPi(j+1);
+
+        if(q == pp) break; // for C
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for C
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,tspArgs.V);
+        if(amb < 0){
+          rst_IJ = make_pair(i,j);
+          improved = true;
+          break; // for C
+        }
+      } // end for C
+      if(improved){
+        break; // for i
+      }
+
+      for(int Cp = 1;Cp<n;Cp++){
+        qp = tspArgs.V.distOrder[pp][Cp];
+        j = this->s_now.getPiInv(qp)-1;
+        q = this->s_now.getPi(j);
+
+        if(qp == p) break; // for Cp
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for Cp
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,tspArgs.V);
+        if(amb < 0){
+          rst_IJ = make_pair(i,j);
+          improved = true;
+          break; // for Cp
+        }
+      } // end for Cp
+      if(improved){
+        break; // for i
+      }
+    } // end for i
+
+    if(improved == false){
+      this->resetState(tspArgs);
+    }
+  } // end while improved
+
+  this->tourLengthChange = FastTwoOptHelper::getAfterMinusBefore(this->s_now,rst_IJ,tspArgs.V);
+  return rst_IJ;
+}
+
+// Like best improvement
+pair<int,int> LinearFittedQIteration::searchActionGreedy(const Arguments& tspArgs){
+  int n = this->s_now.getSize();
+  bool improved = true;
+  double amb = 0;
+  int i,j,p,pp,q,qp;
+  pair<int,int> rst_IJ;  
+  map<double, pair<int,int> > scoreMap;
+
+  while(improved){
+    improved = false;
+    scoreMap.clear();
+    vector<int> i_vec = genRandIntVec(n);
+
+    for(int i : i_vec){
+      p = this->s_now.getPi(i);
+      pp = this->s_now.getPi(i+1);
+
+      for(int C = 1; C<n ; C++){
+        q = tspArgs.V.distOrder[p][C];
+        j = this->s_now.getPiInv(q);
+        qp = this->s_now.getPi(j+1);
+
+        if(q == pp) break; // for C
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for C
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,tspArgs.V);
+        if(amb < 0){
+          scoreMap[LinearFittedQIteration::calcActionValue(p,pp,q,qp,tspArgs)] = make_pair(i,j);
+          improved = true;
+        }
+      } // end for C
+
+      for(int Cp = 1;Cp<n;Cp++){
+        qp = tspArgs.V.distOrder[pp][Cp];
+        j = this->s_now.getPiInv(qp)-1;
+        q = this->s_now.getPi(j);
+
+        if(qp == p) break; // for Cp
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for Cp
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,tspArgs.V);
+        if(amb < 0){
+          scoreMap[LinearFittedQIteration::calcActionValue(p,pp,q,qp,tspArgs)] = make_pair(i,j);
+          improved = true;
+        }
+      } // end for Cp
+    } // end for i
+
+    if(improved == false){
+      this->resetState(tspArgs);
+    }
+  } // end while
+
+  this->tourLengthChange = FastTwoOptHelper::getAfterMinusBefore(this->s_now,rst_IJ,tspArgs.V);
+  rst_IJ = FastTwoOptHelper::getMaxScoredIJ(scoreMap);
+  return rst_IJ;
+}
+
+void LinearFittedQIteration::resetState(const Arguments& tspArgs){
+  this->s_now = generateInitialSolution(tspArgs);
+  s_now.setCost(tspArgs.V);
+  LinearFittedQIteration::setFeatureVector_state(tspArgs);
+}
+
+void LinearFittedQIteration::setFeatureVector_state(const Arguments& tspArgs){
+  this->featureVector_state.assign(tspArgs.K0,0);
+
+  int n = this->s_now.getSize();
+  double dist = 0;
+  int p,pp;
+  int partitionHBegin;
+  int ithEdgeIndex;
+  int pInPartitionH;
+  int ppInPartitionH;
+
+  for(int h = tspArgs.HMIN;h<= tspArgs.HMAX;h++){
+    partitionHBegin = tspArgs.partitionBegins.at(h);
+    const vector<int>& partitionH = tspArgs.partitions.at(h);
+    for(int i=1;i<=n;i++){
+      p = this->s_now.getPi(i);
+      pp = this->s_now.getPi(i+1);
+      dist = tspArgs.V.distMatrix.at(p).at(pp);
+
+      pInPartitionH = partitionH.at(p);
+      ppInPartitionH = partitionH.at(pp);
+
+      ithEdgeIndex = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,ppInPartitionH,h);
+
+      this->featureVector_state.at(ithEdgeIndex) += (dist / tspArgs.U);
+    } // end for i
+  } // end for h
+}
+
+void LinearFittedQIteration::setFeatureVector_action(pair<int,int> action, const Arguments& tspArgs){
+  this->featureVector_action.clear();
+
+  int i = action.first;
+  int j = action.second;
+
+  int p = this->s_now.getPi(i);
+  int pp = this->s_now.getPi(i+1);
+  int q = this->s_now.getPi(j);
+  int qp = this->s_now.getPi(j+1);
+
+  double d1 = tspArgs.V.distMatrix[p][pp]; //d(pi(i)  ,pi(i+1)) dropped
+  double d2 = tspArgs.V.distMatrix[q][qp]; //d(pi(j)  ,pi(i+1)) dropped
+  double d3 = tspArgs.V.distMatrix[p][q];  //d(pi(i)  ,pi(j)  ) added
+  double d4 = tspArgs.V.distMatrix[pp][qp];//d(pi(i+1),pi(j+1)) added
+
+  for(int h = tspArgs.HMIN ; h <= tspArgs.HMAX ; h++){
+    int partitionHBegin = tspArgs.ActionBegin + tspArgs.partitionBegins.at(h);
+
+    const vector<int>& partitionH = tspArgs.partitions.at(h);
+
+    int pInPartitionH  = partitionH.at(p);
+    int ppInPartitionH = partitionH.at(pp);
+    int qInPartitionH  = partitionH.at(q);
+    int qpInPartitionH = partitionH.at(qp);
+
+    int d1Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,ppInPartitionH,h);
+    int d2Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(qInPartitionH,qpInPartitionH,h);
+    int d3Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,qInPartitionH,h);
+    int d4Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(ppInPartitionH,qpInPartitionH,h);
+
+    this->featureVector_action.emplace_back(make_pair(d1Index,-d1 / tspArgs.U));
+    this->featureVector_action.emplace_back(make_pair(d2Index,-d2 / tspArgs.U));
+    this->featureVector_action.emplace_back(make_pair(d3Index,d3 / tspArgs.U));
+    this->featureVector_action.emplace_back(make_pair(d4Index,d4 / tspArgs.U));
+  } // end for h
+}
+
+double LinearFittedQIteration::calcReward(const Arguments& tspArgs){
+  double rst_reward = 0;
+
+  rst_reward += pow(tspArgs.ALPHA, (this->bestTour.getCost() / (this->s_now.getCost() + this->tourLengthChange))-1);
+  rst_reward += tspArgs.BETA * ((this->s_now.getCost() / (this->s_now.getCost() + this->tourLengthChange)) -1);
+
+  return rst_reward;
+}
+
+double LinearFittedQIteration::calcActionValue(int p,int pp, int q, int qp, const Arguments& tspArgs){
+  double rst_actVal = 0;
+
+  double d1 = tspArgs.V.distMatrix[p][pp]; //d(pi(i)  ,pi(i+1)) dropped
+  double d2 = tspArgs.V.distMatrix[q][qp]; //d(pi(j)  ,pi(i+1)) dropped
+  double d3 = tspArgs.V.distMatrix[p][q];  //d(pi(i)  ,pi(j)  ) added
+  double d4 = tspArgs.V.distMatrix[pp][qp];//d(pi(i+1),pi(j+1)) added
+
+  for(int h = tspArgs.HMIN ; h <= tspArgs.HMAX ; h++){
+    int partitionHBegin = tspArgs.ActionBegin + tspArgs.partitionBegins.at(h);
+
+    int pInPartitionH = tspArgs.partitions.at(h).at(p);
+    int ppInPartitionH = tspArgs.partitions.at(h).at(pp);
+    int qInPartitionH = tspArgs.partitions.at(h).at(q);
+    int qpInPartitionH = tspArgs.partitions.at(h).at(qp);
+
+    int d1Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,ppInPartitionH,h);
+    int d2Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(qInPartitionH,qpInPartitionH,h);
+    int d3Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,qInPartitionH,h);
+    int d4Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(ppInPartitionH,qpInPartitionH,h);
+
+    rst_actVal -= d1 * this->theta.at(d1Index) / tspArgs.U;
+    rst_actVal -= d2 * this->theta.at(d2Index) / tspArgs.U;
+    rst_actVal += d3 * this->theta.at(d3Index) / tspArgs.U;
+    rst_actVal += d4 * this->theta.at(d4Index) / tspArgs.U;
+  }
+
+  return rst_actVal;
+}
+
+
+void LinearFittedQIteration::update(pair<int,int>& a_now, MDP& mdp_now, const Arguments& tspArgs){
+  // update replayBuffer
+  this->updateReplayBuffer(mdp_now, tspArgs);
+
+  // update s_now
+  this->updateStateNow(a_now);
 
   // update bestTime, bestDist
-  this->updateBestInfos(s_prev);
+  if(this->bestTour.getCost() > this->s_now.getCost()){
+    this->bestTour = this->s_now;
+  }
 
-  // update distQueue
-  //updateDistQueue(double dist_piStar_next, const Arguments& tstArgs){
-  this->updateDistQueue(s_next.distPiStar, tspArgs);
+  // update fv
+  this->updateFeatureVectorState();
 
-  // s_next is next s_prev
-  s_prev = s_next;
-
-  // time inscrease
-  this->time++;
+  // update time, step, spendSec
+  this->time += 1;
+  this->step += 1;
   this->spendSec = (double)(clock() - this->startTimeT) / CLOCKS_PER_SEC;
+  
+  // update theta when step > MAXstep
+  if(this->step > this->MAXstep){
+    this->step = 1;
+    this->epi += 1;
+    this->updateTheta(tspArgs);
+  }
 }
 
+// ================== old LinQ below ===========
+/*
 void LinearFittedQIteration::updateReplayBuffer(MDP& prevMDP,const Arguments& tspArgs){
   this->replayBuffer.push_back(prevMDP);
   if(this->replayBuffer.size() > tspArgs.MMAX){
@@ -200,7 +458,7 @@ void LinearFittedQIteration::printWeights(){
       cout << "i : " <<  i << " value : " << this->weights.at(i) << endl;
     }
   }
-}
+}*/
 
 //========= DataSet Member ===========================================
 DataSet::DataSet(const Arguments& tspArgs, LinearFittedQIteration& LinQ){
@@ -238,5 +496,38 @@ void DataSet::printInfo(){
     for(auto f : fv) cout << f << " ";
     cout << "'"<< endl << endl;
   }
+}
 
+//========= MDP Member ===========================================
+MDP::MDP(pair<int,int>& a, double r, LinearFittedQIteration& LinQ){
+  this->time = LinQ.time;
+  this->epi = LinQ.epi;
+  this->step = LinQ.step;
+  this->sec = LinQ.spendSec;
+
+  this->state = LinQ.s_now;
+  this->action = a;
+  this->reward = r;
+
+  decodeFeatureVector(LinQ);
+}
+
+void MDP::decodeFeatureVector(LinearFittedQIteration& LinQ){
+  int K0 = LinQ.featureVector_state.size();
+  int K = 1 + 2*K0;
+
+  this->featureVector.assign(K,0);
+  
+  // set constant part 0 ~ 0
+  this->featureVector.at(0) = 1;
+
+  // set state part 1 ~ K0
+  for(int i=0;i<K0;i++){
+    this->featureVector.at(1 + i) = LinQ.featureVector_state.at(i);
+  }
+
+  // set action part K0+1 ~ K
+  for(pair<int,double> actionFeature : LinQ.featureVector_action){
+    this->featureVector.at(actionFeature.first) += actionFeature.second;
+  }
 }

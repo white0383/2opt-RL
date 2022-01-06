@@ -513,29 +513,29 @@ src/solver/local_search/method/TwoOpt.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.s
 .PHONY : src/solver/local_search/method/TwoOpt.cpp.s
 
-src/solver/local_search/method/tmp.o: src/solver/local_search/method/tmp.cpp.o
-.PHONY : src/solver/local_search/method/tmp.o
+src/solver/local_search/method/TwoOptOrdered.o: src/solver/local_search/method/TwoOptOrdered.cpp.o
+.PHONY : src/solver/local_search/method/TwoOptOrdered.o
 
 # target to build an object file
-src/solver/local_search/method/tmp.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o
-.PHONY : src/solver/local_search/method/tmp.cpp.o
+src/solver/local_search/method/TwoOptOrdered.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o
+.PHONY : src/solver/local_search/method/TwoOptOrdered.cpp.o
 
-src/solver/local_search/method/tmp.i: src/solver/local_search/method/tmp.cpp.i
-.PHONY : src/solver/local_search/method/tmp.i
+src/solver/local_search/method/TwoOptOrdered.i: src/solver/local_search/method/TwoOptOrdered.cpp.i
+.PHONY : src/solver/local_search/method/TwoOptOrdered.i
 
 # target to preprocess a source file
-src/solver/local_search/method/tmp.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.i
-.PHONY : src/solver/local_search/method/tmp.cpp.i
+src/solver/local_search/method/TwoOptOrdered.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.i
+.PHONY : src/solver/local_search/method/TwoOptOrdered.cpp.i
 
-src/solver/local_search/method/tmp.s: src/solver/local_search/method/tmp.cpp.s
-.PHONY : src/solver/local_search/method/tmp.s
+src/solver/local_search/method/TwoOptOrdered.s: src/solver/local_search/method/TwoOptOrdered.cpp.s
+.PHONY : src/solver/local_search/method/TwoOptOrdered.s
 
 # target to generate assembly for a file
-src/solver/local_search/method/tmp.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s
-.PHONY : src/solver/local_search/method/tmp.cpp.s
+src/solver/local_search/method/TwoOptOrdered.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.s
+.PHONY : src/solver/local_search/method/TwoOptOrdered.cpp.s
 
 # Help Target
 help:
@@ -594,9 +594,9 @@ help:
 	@echo "... src/solver/local_search/method/TwoOpt.o"
 	@echo "... src/solver/local_search/method/TwoOpt.i"
 	@echo "... src/solver/local_search/method/TwoOpt.s"
-	@echo "... src/solver/local_search/method/tmp.o"
-	@echo "... src/solver/local_search/method/tmp.i"
-	@echo "... src/solver/local_search/method/tmp.s"
+	@echo "... src/solver/local_search/method/TwoOptOrdered.o"
+	@echo "... src/solver/local_search/method/TwoOptOrdered.i"
+	@echo "... src/solver/local_search/method/TwoOptOrdered.s"
 .PHONY : help
 
 

@@ -5,13 +5,13 @@
 #include <map>
 #include <utility> // std::pair
 
-#include "TwoOpt.h"
+#include "TwoOptOrdered.h"
 #include "../../../helper/RandVec.h"
 #include "../../../helper/mt19937ar.h"
 
 using namespace std;
 
-namespace TwoOptHelper{
+namespace TwoOptOrderedHelper{
   /**
    * 2-opt is like below : (i) represent ith node on tour
    * 
@@ -39,7 +39,7 @@ namespace TwoOptHelper{
 
     double distBeforeSwap = g.distMatrix[A][B] + g.distMatrix[C][D];
     double distAfterSwap = g.distMatrix[A][C] + g.distMatrix[B][D];
-
+    
     return distAfterSwap - distBeforeSwap;
   }
 
@@ -91,10 +91,10 @@ namespace TwoOptHelper{
       return getMinScoredIJ(m);
     }
 
-  }
-} // end namespace TwoOptHelper
+  }  
+} // end namespace TwoOptOrderedHelper
 
-Tour twoOpt(const Graph& g, Tour& pi){
+Tour twoOptOrdered(const Graph& g, Tour& pi){
   vector<int> pi_orders = pi.getOrders();
   int n = pi.getSize();
   bool improved = true;
@@ -102,16 +102,14 @@ Tour twoOpt(const Graph& g, Tour& pi){
 
   while(improved){
     improved = false;
-    vector<int> i_vec = genRandIntVec(n-2);  
-    for(int i : i_vec){
-      vector<int> j_vec = genRandIntVec(i+2,n);
-      for(int j : j_vec){
+    for(int i=1;i<= n-2;i++){
+      for(int j=i+2;j<=n;j++){
         //exception handling. adjacent edge
         if((i == 1) && (j == n)) continue;
 
-        amb = TwoOptHelper::getAfterMinusBefore(pi_orders,g,i,j);
+        amb = TwoOptOrderedHelper::getAfterMinusBefore(pi_orders,g,i,j);
         if(amb < 0){
-          TwoOptHelper::swapTwoOpt(pi_orders, i, j);
+          TwoOptOrderedHelper::swapTwoOpt(pi_orders, i, j);
           improved = true;
           break;
         } // end if
@@ -123,14 +121,13 @@ Tour twoOpt(const Graph& g, Tour& pi){
   } // end while
   
   Tour pi_star(pi_orders,g);
-
   return pi_star;
 }
 
-Tour twoOptBestInP(const Graph& g, Tour& pi, double p){
+Tour twoOptOrderedBestInP(const Graph& g, Tour& pi, double p){
   //Exception check
   if((p<0) || (p>1)){
-    cout << "ERROR : twoOptBestInP improper input p\n";
+    cout << "ERROR : twoOptBestOrderedInP improper input p\n";
     cout << "p should be in [0,1]" << endl;
     cout << "yout p : " << p << endl;
     exit(1); 
@@ -146,14 +143,12 @@ Tour twoOptBestInP(const Graph& g, Tour& pi, double p){
     improved = false;
     scoreMap.clear();
 
-    vector<int> i_vec = genRandIntVec(n-2);  
-    for(int i : i_vec){
-      vector<int> j_vec = genRandIntVec(i+2,n);
-      for(int j : j_vec){
+    for(int i=1;i<= n-2;i++){
+      for(int j=i+2;j<=n;j++){
         //exception handling. adjacent edge
         if((i == 1) && (j == n)) continue;
 
-        amb = TwoOptHelper::getAfterMinusBefore(pi_orders,g,i,j);
+        amb = TwoOptOrderedHelper::getAfterMinusBefore(pi_orders,g,i,j);
         if(amb < 0){
           scoreMap[-amb] = make_pair(i,j);
           improved = true;
@@ -162,18 +157,17 @@ Tour twoOptBestInP(const Graph& g, Tour& pi, double p){
     } // end for i
 
     if(improved){
-      TwoOptHelper::swapTwoOpt(pi_orders,TwoOptHelper::getIJ(scoreMap,p));
+      TwoOptOrderedHelper::swapTwoOpt(pi_orders,TwoOptOrderedHelper::getIJ(scoreMap,p));
     }
   } // end while
   
   Tour pi_star(pi_orders,g);
-  return pi_star;  
+  return pi_star;
 }
 
-Tour twoOptBest(const Graph& g, Tour& pi){
-  return twoOptBestInP(g,pi,1);
+Tour twoOptOrderedBest(const Graph& g, Tour& pi){
+  return twoOptOrderedBestInP(g,pi,1);
 }
-
-Tour twoOptLeast(const Graph& g, Tour& pi){
-  return twoOptBestInP(g,pi,0);
+Tour twoOptOrderedLeast(const Graph& g, Tour& pi){
+  return twoOptOrderedBestInP(g,pi,0);
 }

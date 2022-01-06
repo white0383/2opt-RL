@@ -48,7 +48,7 @@ namespace ArgumentsHelper{
     return (num >= 0) && (num <= 1);
   }
 
-  bool verifyInputVectorLength(vector<string>& stringArgs, vector<unsigned int>& integerArgs, vector<double>& realArgs){
+  bool verifyInputVectorLength(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs){
     return (stringArgs.size() == STRINUM) && (integerArgs.size() == INTENUM) && (realArgs.size() == REALNUM);
   }
 
@@ -57,14 +57,14 @@ namespace ArgumentsHelper{
     return find(methodList.begin(),methodList.end(),method) != methodList.end();
   }
 
-  bool verifyInputData(vector<string>& stringArgs, vector<unsigned int>& integerArgs, vector<double>& realArgs){
+  bool verifyInputData(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs){
     try{
       //Check input vectors' length
       if(verifyInputVectorLength(stringArgs, integerArgs, realArgs) == false) {
         string expName = "ERROR : improper input vectors' length";
         string expDesc = "please check your input parameter has";
-        string expDesc2 = "required : 4 strings, 8 unsigned int, 6 double";
-        string expDesc3 = "yout input has " + to_string(stringArgs.size()) + " strings, " + to_string(integerArgs.size()) + " unsigned int, " + to_string(realArgs.size()) + " double";
+        string expDesc2 = "required : 4 strings, 8 int, 6 double";
+        string expDesc3 = "yout input has " + to_string(stringArgs.size()) + " strings, " + to_string(integerArgs.size()) + " int, " + to_string(realArgs.size()) + " double";
         vector<string> expVec = {expName,expDesc,expDesc2,expDesc3};
         throw expVec;
       };
@@ -117,12 +117,12 @@ namespace ArgumentsHelper{
       }
 
       //Check T < TMAX < MMAX
-      unsigned int T = integerArgs[0];
-      unsigned int TMAX = integerArgs[1];
-      unsigned int MMAX = integerArgs[2];
+      int T = integerArgs[0];
+      int TMAX = integerArgs[1];
+      int MMAX = integerArgs[2];
       if((T >= TMAX) || (TMAX >= MMAX)){
         string expName = "ERROR : improper T, TMAX, MMAX value";
-        string expDesc = "please check 1,2,3th unsigned int argument";
+        string expDesc = "please check 1,2,3th int argument";
         string expDesc2 = "your input is T : " + to_string(T) + " TMAX : " + to_string(TMAX) + " MMAX : " + to_string(MMAX);
         string expDesc3 = "they should be T < TMAX < MMAX";
         vector<string> expVec = {expName,expDesc,expDesc2,expDesc3};
@@ -132,11 +132,11 @@ namespace ArgumentsHelper{
       //LAMBDA = integerArgs[3] is okay
 
       //Check HMIN <= HMAX
-      unsigned HMIN = integerArgs[4];
-      unsigned HMAX = integerArgs[5];
+      int HMIN = integerArgs[4];
+      int HMAX = integerArgs[5];
       if(HMIN > HMAX){
         string expName = "ERROR : improper HMIN, HMAX value";
-        string expDesc = "please check 5,6th unsigned int argument";
+        string expDesc = "please check 5,6th int argument";
         string expDesc2 = "your input is HMIN : " + to_string(HMIN) + " HMAX : " + to_string(HMAX);
         string expDesc3 = "they should be HMIN <= HMAX";
         vector<string> expVec = {expName,expDesc,expDesc2,expDesc3};
@@ -202,22 +202,25 @@ namespace ArgumentsHelper{
    * so the number of discriptors for x is
    * (x^4 + x^2)/2
    * 
+   * feature vector has state part and action part
+   * they has same size of (x^4 + x^2)/2
+   * 
    * x is integer in [min_div, max_div]
    * 
    * in conclusion,
    * the dimention of feature vector is 
-   * 1 + sum_{x in [min_div, max_div]} (x^4 + x^2)/2 
+   * 1 + sum_{x in [min_div, max_div]} (x^4 + x^2)
    * 
    * "1" is expression of constant term in linear-Qfunction 
    */
-  int calcK_axisDivide(unsigned int min_div, unsigned int max_div){
-    unsigned int rst_K = 1; // constant term in linear-Qfunction
+  int calcK0_axisDivide(int min_div, int max_div){
+    int rst_K0 = 0;
 
-    for(unsigned int x = min_div ; x <= max_div ; x++){
-      rst_K += (x*x*x*x + x*x) / 2; // (x^4 + x^2) /2
+    for(int x = min_div ; x <= max_div ; x++){
+      rst_K0 += (x*x*x*x + x*x) / 2; // (x^4 + x^2)
     }
 
-    return rst_K;
+    return rst_K0;
   } 
 
   bool compare(pair<int,double> a, pair<int,double> b){
@@ -249,7 +252,7 @@ Arguments::Arguments() {
   exit(1);
 }
 
-Arguments::Arguments(vector<string>& stringArgs, vector<unsigned int>& integerArgs, vector<double>& realArgs){
+Arguments::Arguments(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs){
   if(ArgumentsHelper::verifyInputData(stringArgs,integerArgs,realArgs)){
     // copy input datas
     this->TSP_INSTANCE_NAME = stringArgs[0];
@@ -276,8 +279,13 @@ Arguments::Arguments(vector<string>& stringArgs, vector<unsigned int>& integerAr
     // operate and calculate
     init_genrand(this->SEED);
     this->V = Graph(this->TSP_INSTANCE_NAME);
-    this->K = ArgumentsHelper::calcK_axisDivide(this->HMIN, this->HMAX);
+    this->K0 = ArgumentsHelper::calcK0_axisDivide(this->HMIN, this->HMAX);
+    this->K = 1 + 2*this->K0;
+    this->StateBegin = 1;
+    this->ActionBegin = K0 + 1;
     this->setPartitions();
+    this->setPartitionBegins();
+    this->setU();
   } else {
     cout << "Unexpected exception Occured in Arguments constructor" << endl;
     cout << "Terminate 2opt-RL" << endl;
@@ -286,13 +294,41 @@ Arguments::Arguments(vector<string>& stringArgs, vector<unsigned int>& integerAr
 }
 
 void Arguments::setPartitions(){
-  this->partitions.reserve(this->HMAX - this->HMIN + 1);
-  vector<int> partition(this->V.nodes.size());
+  this->partitions.clear();
 
+  vector<int> partition(this->V.nodes.size());
   for(int h = this->HMIN; h <= this->HMAX ; h++){
     for(int i = 0 ; i < this->V.nodes.size();i++){
       partition[i] = ArgumentsHelper::checkPartition(this->V.nodes[i],h);
     }
-    this->partitions.emplace_back(partition);
+    this->partitions[h]=partition;
   }
+}
+
+void Arguments::setPartitionBegins(){
+  this->partitionBegins.clear();
+
+  int partitionBegin = 0;
+  for(int h = this->HMIN; h<= this->HMAX ; h++){
+    this->partitionBegins[h] = partitionBegin;
+
+    partitionBegin += (h*h*h*h + h*h) /2;
+  }
+}
+
+void Arguments::setU(){
+  double rst_maxDIJ = -1;
+  int farthestNodeFromI = 0;
+  double farthestDistFromI = 0;
+  for(int i=1;i<=this->V.getN();i++){
+    farthestNodeFromI = this->V.distOrder[i][this->V.getN()-1];
+    farthestDistFromI = this->V.distMatrix[i][farthestNodeFromI];
+    if(rst_maxDIJ < farthestDistFromI){
+      cout << farthestDistFromI << endl;
+      rst_maxDIJ = farthestDistFromI;
+    }
+  }
+
+  double rst_U = rst_maxDIJ * this->V.getN();
+  this->U = rst_U;
 }

@@ -33,8 +33,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o.d"
   "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o"
   "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o.d"
-  "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o"
-  "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o.d"
+  "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o"
+  "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

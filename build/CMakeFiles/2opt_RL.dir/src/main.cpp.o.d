@@ -246,5 +246,5 @@ CMakeFiles/2opt_RL.dir/src/main.cpp.o: \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/TwoOpt.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/../../../model/Tour.h \
   /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/../../../model/Graph.h \
-  /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/FastTwoOpt.h \
-  /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/tmp.h
+  /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/TwoOptOrdered.h \
+  /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/./solver/local_search/method/FastTwoOpt.h

@@ -279,10 +279,24 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/TwoOpt.cpp -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.s
 
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o: ../src/solver/local_search/method/TwoOptOrdered.cpp
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/TwoOptOrdered.cpp
+
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/TwoOptOrdered.cpp > CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.i
+
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/TwoOptOrdered.cpp -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.s
+
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: ../src/solver/local_search/method/FastTwoOpt.cpp
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/FastTwoOpt.cpp
 
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.i: cmake_force
@@ -292,20 +306,6 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.i: cmake_fo
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/FastTwoOpt.cpp -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.s
-
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: CMakeFiles/2opt_RL.dir/flags.make
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/local_search/method/tmp.cpp
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: CMakeFiles/2opt_RL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o -MF CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o.d -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o -c /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/tmp.cpp
-
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/tmp.cpp > CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.i
-
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/leekw0127/School/2021-2/졸업논문-코딩/2opt-RL/src/solver/local_search/method/tmp.cpp -o CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s
 
 # Object files for target 2opt_RL
 2opt_RL_OBJECTS = \
@@ -324,8 +324,8 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s: cmake_force
 "CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/solver/local_search/SearchLocalOpt.cpp.o" \
 "CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o" \
-"CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o" \
-"CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o"
+"CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o" \
+"CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o"
 
 # External object files for target 2opt_RL
 2opt_RL_EXTERNAL_OBJECTS =
@@ -345,8 +345,8 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.s: cmake_force
 2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/initial_solution/method/FarthestInsertion.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/local_search/SearchLocalOpt.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o
+2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o
-2opt_RL: CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o
 2opt_RL: CMakeFiles/2opt_RL.dir/build.make
 2opt_RL: /Applications/CPLEX_Studio1210/cplex/lib/x86-64_osx/static_pic/libcplex.a
 2opt_RL: /Applications/CPLEX_Studio1210/cplex/lib/x86-64_osx/static_pic/libcplexdistmip.a

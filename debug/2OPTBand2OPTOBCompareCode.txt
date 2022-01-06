@@ -1,0 +1,60 @@
+
+    //compare 2OPTB and 2OPTOB
+    Arguments* tspArgs;
+    int expNum = 10;
+    map<string, double> timeMapOPTB;
+    map<string, double> timeMapOPTOB;
+    map<string, int> winScoreMap; // how many times 2OPTB won at score
+    map<string, int> winTimeMap; // how many times 2OPTB won at computation time
+    string optb_str = "2OPTB";
+    string optob_str = "2OPTOB";
+
+    for(auto TSPLIB:TSPLIB_instances){
+      argSTR[0] = TSPLIB;
+      argINT[6] += 1; // SEED += 1
+
+      tspArgs = new Arguments(argSTR,argINT,argREA);
+
+      time_t startT = clock();
+      double rst_time_OPTB = 0;
+      double rst_time_OPTOB = 0;
+      int OPTB_win_score = 0;
+      int OPTB_win_time = 0; 
+      double spent_time_OPTB = 0;
+      double spent_time_OPTOB = 0;
+      for(int i=0;i<expNum;i++){
+        argINT[6] += 1; // SEED += 1
+        Tour initTour = generateInitialSolution(*tspArgs);
+
+        startT = clock();
+        Tour optTourOPTB = searchLocalOpt(tspArgs->V,optb_str,initTour) ;
+        spent_time_OPTB = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        startT = clock();
+        Tour optTourOPTOB = searchLocalOpt(tspArgs->V,optob_str,initTour);
+        spent_time_OPTOB = (double)(clock() - startT) / CLOCKS_PER_SEC;
+
+        optTourOPTB.setCost(tspArgs->V);
+        optTourOPTOB.setCost(tspArgs->V);
+
+        rst_time_OPTB += spent_time_OPTB;
+        rst_time_OPTOB += spent_time_OPTOB;
+
+        if(spent_time_OPTB < spent_time_OPTOB) OPTB_win_time++;
+        if(optTourOPTB.getCost() < optTourOPTOB.getCost()) OPTB_win_score++;
+      }
+
+      timeMapOPTB.insert({TSPLIB,rst_time_OPTB});
+      timeMapOPTOB.insert({TSPLIB,rst_time_OPTOB});
+      winScoreMap.insert({TSPLIB,OPTB_win_score});
+      winTimeMap.insert({TSPLIB,OPTB_win_time});
+    }
+
+    for(auto TSPLIB : TSPLIB_instances){
+      cout << TSPLIB << "\t: ";
+      cout << timeMapOPTB.find(TSPLIB)->second << "\t ";
+      cout << timeMapOPTOB.find(TSPLIB)->second << "\t ";
+      cout << winScoreMap.find(TSPLIB)->second << "\t ";
+      cout << winTimeMap.find(TSPLIB)->second << "\t ";
+      cout << endl;
+    }

@@ -755,8 +755,8 @@ CMakeFiles/2opt_RL.dir/src/main.cpp.o: ../src/main.cpp \
   ../src/solver/local_search/method/TwoOpt.h \
   ../src/model/Tour.h \
   ../src/model/Graph.h \
-  ../src/solver/local_search/method/FastTwoOpt.h \
-  ../src/solver/local_search/method/tmp.h
+  ../src/solver/local_search/method/TwoOptOrdered.h \
+  ../src/solver/local_search/method/FastTwoOpt.h
 
 CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: ../src/model/Arguments.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/vector \
@@ -992,6 +992,10 @@ CMakeFiles/2opt_RL.dir/src/model/Arguments.cpp.o: ../src/model/Arguments.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/math.h \
   ../src/model/Arguments.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
   ../src/model/Graph.h \
   ../src/model/Node.h \
   ../src/model/Graph.h \
@@ -1785,6 +1789,10 @@ CMakeFiles/2opt_RL.dir/src/solver/initial_solution/GenerateInitialSolution.cpp.o
   ../src/model/Node.h \
   ../src/model/Distance.h \
   ../src/model/Arguments.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
   ../src/model/Graph.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/ios \
@@ -2731,6 +2739,10 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/SearchLocalOpt.cpp.o: ../src/solv
   ../src/model/Node.h \
   ../src/model/Distance.h \
   ../src/model/Arguments.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
   ../src/model/Graph.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/ios \
@@ -2814,7 +2826,8 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/SearchLocalOpt.cpp.o: ../src/solv
   ../src/solver/local_search/method/TwoOpt.h \
   ../src/model/Tour.h \
   ../src/model/Graph.h \
-  ../src/solver/local_search/method/FastTwoOpt.h
+  ../src/solver/local_search/method/FastTwoOpt.h \
+  ../src/solver/local_search/method/TwoOptOrdered.h
 
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: ../src/solver/local_search/method/FastTwoOpt.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iostream \
@@ -3044,6 +3057,10 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: ../src/s
   /Library/Developer/CommandLineTools/usr/include/c++/v1/float.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include/float.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/float.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
   ../src/solver/local_search/method/FastTwoOpt.h \
   ../src/model/Tour.h \
   ../src/model/Graph.h \
@@ -3051,9 +3068,7 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/FastTwoOpt.cpp.o: ../src/s
   ../src/model/Distance.h \
   ../src/helper/RandVec.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/set \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional
+  ../src/helper/mt19937ar.h
 
 CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o: ../src/solver/local_search/method/TwoOpt.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iostream \
@@ -3284,6 +3299,10 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o: ../src/solve
   /Library/Developer/CommandLineTools/usr/include/c++/v1/float.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include/float.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/float.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
   ../src/solver/local_search/method/TwoOpt.h \
   ../src/model/Tour.h \
   ../src/model/Graph.h \
@@ -3291,11 +3310,9 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOpt.cpp.o: ../src/solve
   ../src/model/Distance.h \
   ../src/helper/RandVec.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/set \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional
+  ../src/helper/mt19937ar.h
 
-CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/local_search/method/tmp.cpp \
+CMakeFiles/2opt_RL.dir/src/solver/local_search/method/TwoOptOrdered.cpp.o: ../src/solver/local_search/method/TwoOptOrdered.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/pthread.h \
@@ -3520,20 +3537,25 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/l
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__split_buffer \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/cfloat \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/float.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include/float.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/float.h \
-  ../src/solver/local_search/method/tmp.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional \
+  ../src/solver/local_search/method/TwoOptOrdered.h \
   ../src/model/Tour.h \
   ../src/model/Graph.h \
   ../src/model/Node.h \
   ../src/model/Distance.h \
   ../src/helper/RandVec.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/set \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__tree \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__node_handle \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/optional
+  ../src/helper/mt19937ar.h
 
+
+../src/solver/local_search/method/TwoOptOrdered.cpp:
 
 ../src/solver/local_search/method/TwoOpt.cpp:
 
@@ -3550,6 +3572,8 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/l
 ../src/model/Arguments.cpp:
 
 ../src/solver/local_search/method/FastTwoOpt.h:
+
+../src/solver/local_search/method/TwoOptOrdered.h:
 
 ../src/solver/initial_solution/method/NearestNeighbor.h:
 
@@ -3645,8 +3669,6 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/l
 
 ../src/solver/initial_solution/method/FarthestInsertion.h:
 
-../src/solver/local_search/method/tmp.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/sys/_pthread/_pthread_cond_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/_locale.h:
@@ -3692,8 +3714,6 @@ CMakeFiles/2opt_RL.dir/src/solver/local_search/method/tmp.cpp.o: ../src/solver/l
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/pthread/pthread_impl.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/pthread_impl.h:
-
-../src/solver/local_search/method/tmp.cpp:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/deque:
 

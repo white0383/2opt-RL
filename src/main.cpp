@@ -14,8 +14,8 @@
 #include "./solver/initial_solution/GenerateInitialSolution.h"
 #include "./solver/local_search/SearchLocalOpt.h"
 #include "./solver/local_search/method/TwoOpt.h"
+#include "./solver/local_search/method/TwoOptOrdered.h"
 #include "./solver/local_search/method/FastTwoOpt.h"
-#include "./solver/local_search/method/tmp.h"
 
 using namespace std;
 
@@ -54,17 +54,17 @@ int main(){
   //**** Methods
   vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299"};
   vector<string> VLSI_instances = {"xqf131", "xqg237", "pma343","xql662"};
-  string tourInitMethod = "RT"; // RT FI
+  string tourInitMethod = "FI"; // RT FI
   string learnTermiCondi = "EPI"; // EPI SEC
   string thetaInitMethod = "UNI"; // UNI GAU ONE
 
   //**** Learning Hyperparameters
-  unsigned int T = 100; // the number of samples for each learning
-  unsigned int TMAX = 200; // the number of steps per theta update
-  unsigned int MMAX = 600; // maximum size of MDP queue
-  unsigned int LAMBDA = 5; // parameter in calculating rho
-  unsigned int HMIN = 3; // minimum axis divisions in partition
-  unsigned int HMAX = 4; // maximum axis divisions in partition
+  int T = 100; // the number of samples for each learning
+  int TMAX = 200; // the number of steps per theta update
+  int MMAX = 600; // maximum size of MDP queue
+  int LAMBDA = 5; // parameter in calculating rho
+  int HMIN = 3; // minimum axis divisions in partition
+  int HMAX = 7; // maximum axis divisions in partition
   double alpha = 1.1; // in reward of MDP
   double beta = 0.95; // in reward of MDP
   double gamma = 0.95; // discount factor
@@ -72,44 +72,33 @@ int main(){
   double greedyEps = 0.1; // probability of random action
 
   //**** Other Hyperparameters
-  unsigned int SEED =  1208030;
-  unsigned int EPILMT = 50;
+  int SEED =  120800;
+  int EPILMT = 50;
   double secLmt = 180.0;
 
   /* use below while implementation */
   /*********************************/
   //"ArgumentsDebug" TSPLIB_instances[0]
-  vector<string> argSTR = { TSPLIB_instances[4], tourInitMethod, learnTermiCondi, thetaInitMethod};
-  vector<unsigned int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
+  vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+  vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
   vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
+  Arguments tspArgs = Arguments(argSTR,argINT,argREA);
+  cout << tspArgs.K << endl;
+  
+
+/*
   //Arguments tspArgs = Arguments(argSTR, argINT, argREA);
 
-    //test normal 2opt
-    string LOCAL_METHOD = "2OPT";
-    //Tour initTour = generateInitialSolution(tspArgs);
-    //Tour optTour = searchLocalOpt(tspArgs.V,LOCAL_METHOD,initTour);
-
-
-    //test fast 2opt
-    //LOCAL_METHOD = "F2OPT";
-    //Tour initTour = generateInitialSolution(tspArgs);
-    //Tour optTour = fastTwoOpt(tspArgs.V,initTour);
-    //Tour optTourTmp = fastTwoOptTmp(tspArgs.V,initTour);
-    //initTour.setCost(tspArgs.V);
-    //optTour.setCost(tspArgs.V);
-    //optTourTmp.setCost(tspArgs.V);
-    //initTour.printTour();
-    //optTour.printTour();
-    //optTourTmp.printTour();
-    
-    //compare fast-2opt and normal-2opt
+    //compare F2OPTB and 2OPTOB
     Arguments* tspArgs;
-    int expNum = 1000;
-    map<string, double> timeMapFast;
-    map<string, double> timeMapNorm;
-    map<string, int> winFastScoreMap; // how many times fastTwoOpt won at score
-    map<string, int> winFastTimeMap; // how many times fastTwoOpt won at computation time
+    int expNum = 100;
+    map<string, double> timeMapFOPTB;
+    map<string, double> timeMapOPTOB;
+    map<string, int> winScoreMap; // how many times 2FOPTB won at score
+    map<string, int> winTimeMap; // how many times 2FOPTB won at computation time
+    string optb_str = "F2OPTB";
+    string optob_str = "F2OPT";
 
     for(auto TSPLIB:TSPLIB_instances){
       argSTR[0] = TSPLIB;
@@ -118,51 +107,51 @@ int main(){
       tspArgs = new Arguments(argSTR,argINT,argREA);
 
       time_t startT = clock();
-      double rst_time_norm = 0;
-      double rst_time_fast = 0;
-      int fast_win_score = 0;
-      int fast_win_time = 0; 
-      double spent_time_norm = 0;
-      double spent_time_fast = 0;
+      double rst_time_FOPTB = 0;
+      double rst_time_OPTOB = 0;
+      int FOPTB_win_score = 0;
+      int FOPTB_win_time = 0; 
+      double spent_time_FOPTB = 0;
+      double spent_time_OPTOB = 0;
       for(int i=0;i<expNum;i++){
         argINT[6] += 1; // SEED += 1
         Tour initTour = generateInitialSolution(*tspArgs);
 
         startT = clock();
-        Tour optTourFast = fastTwoOpt(tspArgs->V,initTour);
-        spent_time_fast = (double)(clock() - startT) / CLOCKS_PER_SEC;
+        Tour optTourFOPTB = searchLocalOpt(tspArgs->V,optb_str,initTour) ;
+        spent_time_FOPTB = (double)(clock() - startT) / CLOCKS_PER_SEC;
 
         startT = clock();
-        Tour optTourNorm = twoOpt(tspArgs->V,initTour);
-        spent_time_norm = (double)(clock() - startT) / CLOCKS_PER_SEC;
+        Tour optTourOPTOB = searchLocalOpt(tspArgs->V,optob_str,initTour);
+        spent_time_OPTOB = (double)(clock() - startT) / CLOCKS_PER_SEC;
 
-        optTourFast.setCost(tspArgs->V);
-        optTourNorm.setCost(tspArgs->V);
+        optTourFOPTB.setCost(tspArgs->V);
+        optTourOPTOB.setCost(tspArgs->V);
 
-        rst_time_fast += spent_time_fast;
-        rst_time_norm += spent_time_norm;
+        rst_time_FOPTB += spent_time_FOPTB;
+        rst_time_OPTOB += spent_time_OPTOB;
 
-        if(spent_time_fast < spent_time_norm) fast_win_time++;
-        if(optTourFast.getCost() < optTourNorm.getCost()) fast_win_score++;
+        if(spent_time_FOPTB < spent_time_OPTOB) FOPTB_win_time++;
+        if(optTourFOPTB.getCost() < optTourOPTOB.getCost()) FOPTB_win_score++;
       }
 
-      timeMapFast.insert({TSPLIB,rst_time_fast});
-      timeMapNorm.insert({TSPLIB,rst_time_norm});
-      winFastScoreMap.insert({TSPLIB,fast_win_score});
-      winFastTimeMap.insert({TSPLIB,fast_win_time});
+      timeMapFOPTB.insert({TSPLIB,rst_time_FOPTB});
+      timeMapOPTOB.insert({TSPLIB,rst_time_OPTOB});
+      winScoreMap.insert({TSPLIB,FOPTB_win_score});
+      winTimeMap.insert({TSPLIB,FOPTB_win_time});
     }
 
     for(auto TSPLIB : TSPLIB_instances){
       cout << TSPLIB << "\t: ";
-      cout << timeMapFast.find(TSPLIB)->second << "\t ";
-      cout << timeMapNorm.find(TSPLIB)->second << "\t ";
-      cout << winFastScoreMap.find(TSPLIB)->second << "\t ";
-      cout << winFastTimeMap.find(TSPLIB)->second << "\t ";
+      cout << timeMapFOPTB.find(TSPLIB)->second << "\t ";
+      cout << timeMapOPTOB.find(TSPLIB)->second << "\t ";
+      cout << winScoreMap.find(TSPLIB)->second << "\t ";
+      cout << winTimeMap.find(TSPLIB)->second << "\t ";
       cout << endl;
     }
-
   //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
   //LinQ.learn(tspArgs);
+*/
   /*********************************/
 
   /* use below in real experiments */

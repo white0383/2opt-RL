@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "../model/Graph.h"
 
 /**
@@ -24,14 +25,14 @@ class Arguments {
     string LEARN_TERMINATE_METHOD; // name of termination method (time or episode)
     string THETA_INIT_METHOD; // name of weight initialization method
 
-    unsigned int SEED ; // seed of RNG
-    unsigned int T ; // the number of samples for each learning
-    unsigned int TMAX ; // the number of steps per theta update
-    unsigned int MMAX ; // Maximum size of MDP queue
-    unsigned int LAMBDA ; // parameter in calculating rho
-    unsigned int HMIN ; // minimum axis divisions in partition
-    unsigned int HMAX ; // maximum axis divisions in partition
-    unsigned int EPI_LIMIT ; // Maximum value of episode number
+    int SEED ; // seed of RNG
+    int T ; // the number of samples for each learning
+    int TMAX ; // the number of steps per theta update
+    int MMAX ; // Maximum size of MDP queue
+    int LAMBDA ; // parameter in calculating rho
+    int HMIN ; // minimum axis divisions in partition
+    int HMAX ; // maximum axis divisions in partition
+    int EPI_LIMIT ; // Maximum value of episode number
 
     double ALPHA ; // parameter in reward function. bigger than 1
     double BETA ; // parameter in reward function. in [0,1]
@@ -43,17 +44,24 @@ class Arguments {
     //==========================================
     //===== Arguments that are calculated ======
     //==========================================
-    unsigned int K ; // lenght of feature vector and learning parameter vector (minus 1)
     Graph V; // set of nodes
-    
-    vector<vector<int> > partitions;
+
+    map<int, vector<int> > partitions;
+    int K0; // sum(h= HMIN ~ HMAX) (h**4 + h**2)/2
+    int K ; // lenght of feature vector and learning parameter vector (minus 1)
+    int StateBegin;
+    int ActionBegin;
+    map<int,int> partitionBegins;
+    double U;
 
   public :
     Arguments();
 
-    Arguments(vector<string>& stringArgs, vector<unsigned int>& integerArgs, vector<double>& realArgs);
+    Arguments(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs);
 
     void setPartitions();
+    void setPartitionBegins();
+    void setU();
 };
 
 #endif // TSP_ARGUMENTS_H

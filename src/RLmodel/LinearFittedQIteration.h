@@ -29,18 +29,36 @@ class LinearFittedQIteration{
      *    step : 1 2 3 1 2 3 1 2 3  1  2  3
      *     epi : 1 1 1 2 2 2 3 3 3  4  4  4 
      */
-    unsigned int time;
-    //  unsigned int MAXtime = +infinity
-    unsigned int step;
-    unsigned int MAXstep; // const TMAX in tspArgs
-    unsigned int epi; 
-    unsigned int MAXepi; // const EPI_LIMIT in tspArgs
+    int time;
+    //  int MAXtime = +infinity
+    int step;
+    int MAXstep; // const TMAX in tspArgs
+    int epi; 
+    int MAXepi; // const EPI_LIMIT in tspArgs
 
     // Focusing Tour : State of now
     Tour s_now;
 
     //For calculating reward
     Tour bestTour;
+
+    /**
+     * Saving data for accelerating
+     * 1. Tour length calculation
+     *   in searchActionRandom and searchActionGreedy,
+     *   amb is always equal to dist(s_next) - dist(s_now)
+     *   because of its definition.
+     *   Set tourLengthChange to amb.
+     *   Then, we don't have to calculate dist(s_next).
+     *   dist(s_now) is always known.
+     *   dist(s_next) = dist(s_now) + tourLengthChange
+     * 
+     * 2. Feature vector calculation
+     *   let fv(s_now,a_now) is (fs_now,fa_now)
+     */
+    double tourLengthChange;
+    vector<double> featureVector_state;
+    vector<pair<int,double> > featureVector_action;
 
   public:
     // constructor
@@ -58,42 +76,101 @@ class LinearFittedQIteration{
     bool checkTerminationCondition(const Arguments& tspArgs);   
 
     /**
+     * use F2OPT as neighborhood search method
+     * because it is the fastest method we have
      * 
+     * IJ is an action which make tour shorter
+     * 
+     * In probability of tspArgs.GREEDY_EPS,
+     * return IJ which first found
+     *  this is searchActionRandom
+     * 
+     * In probability of 1 - tspArgs.GREEDY_EPS
+     * return IJ which maximize Q-function
+     *   this is searchActionGreedy
+     * 
+     * when there is no improvement in neighborhood,
+     * then reset this->s_now by initial solution generator
+     * and find IJ again
      */
     pair<int,int> searchAction(const Arguments& tspArgs);
+
+    pair<int,int> searchActionRandom(const Arguments& tspArgs);
+    pair<int,int> searchActionGreedy(const Arguments& tspArgs);
+
+    /**
+     * reset s_now to the other init Tour
+     */
+    void resetState(const Arguments& tspArgs);
+
+    /**
+     * reset featureVector_state of this->s_now
+     */
+    void setFeatureVector_state(const Arguments& tspArgs);
+
+    /**
+     * reset featureVector_state of action
+     * 
+     * let featureVector_state as FA in short
+     * 
+     * FA is vector of pair<int,double>
+     * first member represents index
+     * second member represents value
+     * 
+     * FA is very sparce,
+     * so this representation makes sense
+     */
+    void setFeatureVector_action(pair<int,int> action, const Arguments& tspArgs);
+
+    /**
+     * return reward
+     * 
+     * r = alpha**((bestTour.getCost / (s_now.getCost + tourLengthCange)) -1 ) + beta*((s_now.getCost / (s_now.getCost + tourLengthCange)) -1 )
+     */
+    double calcReward(const Arguments& tspArgs);
+
+    /**
+     * return action's value
+     */
+    double calcActionValue(int p,int pp, int q, int qp, const Arguments& tspArgs);
 
     /**
      * finish a time step, and update model's internal infomation
      * 
-     * 1. update replayBuffer
-     * 2. update bestInfos
-     * 3. s_prev = s_next
-     * 4. this->time ++
+     * 1. update ReplayBuffer
+     * 2. update s_now
+     * 3. update BestTour (BestTour vs s_now)
+     * 4. update featureVector_state
+     * 5. update time, step, spendSec
+     * 6. if step > MAXstep then
+     * 7.   step = 1
+     * 8.   update epi
+     * 9.   update theta
      */
-    //void update(???);
-
+    void update(pair<int,int>& a_now, MDP& mdp_now, const Arguments& tspArgs);
 
     /**
      * Push_back prevMDP into ReplayBuffer
      * and pop_front if its size is bigger than MMAX
      */
-    //void updateReplayBuffer(MDP& prevMDP,const Arguments& tspArgs);
+    void updateReplayBuffer(MDP& mdp_now, const Arguments& tspArgs);
 
     /**
-     * Update bestTime and bestDist
+     * Conduct 2-opt-move to s_now
      * 
-     * let input double number dist_prev
-     * 
-     * if bestDist > dist_prev
-     * then bestDist = dist_prev 
-     * and bestTime = time
+     * update Tour and its cost
      */
-    //void updateBestInfos(State& s_prev);
+    void updateStateNow(pair<int,int>& a_now);
 
     /**
-     * update weights vector using least square method
+     * Update featureVector_state with featureVector_action
      */
-    //void updateTheta(DataSet& dataSet);
+    void updateFeatureVectorState();
+
+    /**
+     * Update theta with LP solver CPLEX
+     */
+    void updateTheta(const Arguments& tspArgs);
 
     // Getter
     //vector<double> getTheta();
@@ -134,17 +211,19 @@ class DataSet{
 
 class MDP{
   public:
-    unsigned int time;
-    unsigned int epi;
-    unsigned int step;
+    int time;
+    int epi;
+    int step;
+    double sec;
     Tour state;
     pair<int,int> action;
     double reward;
     vector<double> featureVector;
   
   public:
-    MDP(Tour& s, pair<int,int>& a, double r, vector<double>& f, LinearFittedQIteration& LinQ);
-};
+    MDP(pair<int,int>& a, double r, LinearFittedQIteration& LinQ);
 
+    void decodeFeatureVector(LinearFittedQIteration& LinQ);
+};
 
 #endif //TSP_LINFITQITE_H

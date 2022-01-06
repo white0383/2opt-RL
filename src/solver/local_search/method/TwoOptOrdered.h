@@ -1,5 +1,5 @@
-#ifndef TSP_2OPT_H
-#define TSP_2OPT_H
+#ifndef TSP_2OPTORDERED_H
+#define TSP_2OPTORDERED_H
 
 #include "../../../model/Tour.h"
 #include "../../../model/Graph.h"
@@ -15,10 +15,10 @@
  * @param Tour pi : initial solution of TSP 
  * @return Tour solution_star : complete Tour of g
  */
-Tour twoOpt(const Graph& g, Tour& pi);
+Tour twoOptOrdered(const Graph& g, Tour& pi);
 
-Tour twoOptBestInP(const Graph& g, Tour& pi, double p);
-Tour twoOptBest(const Graph& g, Tour& pi);
-Tour twoOptLeast(const Graph& g, Tour& pi);
+Tour twoOptOrderedBestInP(const Graph& g, Tour& pi, double p);
+Tour twoOptOrderedBest(const Graph& g, Tour& pi);
+Tour twoOptOrderedLeast(const Graph& g, Tour& pi);
 
-#endif // TSP_2OPT_H
+#endif // TSP_2OPTORDERED_H
