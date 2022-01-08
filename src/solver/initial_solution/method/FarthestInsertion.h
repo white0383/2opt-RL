@@ -10,5 +10,6 @@
  * @return Tour solution : complete Tour of g
  */
 Tour farthestInsertion(const Graph& g);
+Tour farthestInsertion(const Graph& g, mt19937& rng);
 
 #endif // TSP_FARTHESTINSERTION_H

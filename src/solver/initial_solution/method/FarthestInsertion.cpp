@@ -146,3 +146,47 @@ Tour farthestInsertion(const Graph& g){
     exit(1);
   }
 }
+
+
+Tour farthestInsertion(const Graph& g, mt19937& rng){
+  int n = g.getN();
+
+  // select random city index in [n] = {1,2, ... n-1, n}
+  // the first city to visit
+  // B is the farthest city from A.
+  int cityAIndex = rng() % n + 1;
+  int cityBIndex = g.distOrder[cityAIndex][n-1];
+
+  //tmpOrder helps to make initTour
+  //insert new city in tmpOrder with vector.insert method
+  //and then re-construct initTour with Tour.setNewTour method
+  vector<int> tmpOrder = {cityAIndex, cityBIndex};
+  Tour initTour(tmpOrder, g);
+
+  //Farthest City's index
+  int fc=0;
+  //Insertion City's index
+  int ic=0;
+
+  //While initTour visit every city,
+  //add city fc between initTour.tour[ic] and initTour.tour[ic+1].
+  //City fc is the FARTHEST(from initTour) city that is not included in initTour.
+  //City ic is a city that is included in initTour, 
+  //and it minimize d(tour[i],k) + d(k,pi[i+1]) - d(pi[i],pi[i+1]).
+  //d(a,b) represent dist(g.nodes[a], g.nodes[b]).
+  while(initTour.getSize() != n){
+    fc = FIHelper::findFarthestCity(initTour, g);
+    ic = FIHelper::findWhereToInsert(initTour, fc,g);
+    //cout << "fc : " << fc << " ic : " << ic << endl;
+    initTour.insert(fc,ic,g);
+  }
+
+
+  //double check initTour
+  if(initTour.isCompleteTour(g)){
+    return initTour;
+  } else {
+    cout << "ERROR : Initial Solution is not a complete tour" << endl;
+    exit(1);
+  }
+}

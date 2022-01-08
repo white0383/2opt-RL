@@ -129,30 +129,6 @@ depend:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/build
 .PHONY : 2opt_RL/fast
 
-src/RLmodel/LinearFittedQIteration.o: src/RLmodel/LinearFittedQIteration.cpp.o
-.PHONY : src/RLmodel/LinearFittedQIteration.o
-
-# target to build an object file
-src/RLmodel/LinearFittedQIteration.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.o
-.PHONY : src/RLmodel/LinearFittedQIteration.cpp.o
-
-src/RLmodel/LinearFittedQIteration.i: src/RLmodel/LinearFittedQIteration.cpp.i
-.PHONY : src/RLmodel/LinearFittedQIteration.i
-
-# target to preprocess a source file
-src/RLmodel/LinearFittedQIteration.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.i
-.PHONY : src/RLmodel/LinearFittedQIteration.cpp.i
-
-src/RLmodel/LinearFittedQIteration.s: src/RLmodel/LinearFittedQIteration.cpp.s
-.PHONY : src/RLmodel/LinearFittedQIteration.s
-
-# target to generate assembly for a file
-src/RLmodel/LinearFittedQIteration.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.s
-.PHONY : src/RLmodel/LinearFittedQIteration.cpp.s
-
 src/helper/FileIOHelper.o: src/helper/FileIOHelper.cpp.o
 .PHONY : src/helper/FileIOHelper.o
 
@@ -200,6 +176,30 @@ src/helper/RandVec.s: src/helper/RandVec.cpp.s
 src/helper/RandVec.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/helper/RandVec.cpp.s
 .PHONY : src/helper/RandVec.cpp.s
+
+src/helper/Timer.o: src/helper/Timer.cpp.o
+.PHONY : src/helper/Timer.o
+
+# target to build an object file
+src/helper/Timer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/helper/Timer.cpp.o
+.PHONY : src/helper/Timer.cpp.o
+
+src/helper/Timer.i: src/helper/Timer.cpp.i
+.PHONY : src/helper/Timer.i
+
+# target to preprocess a source file
+src/helper/Timer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/helper/Timer.cpp.i
+.PHONY : src/helper/Timer.cpp.i
+
+src/helper/Timer.s: src/helper/Timer.cpp.s
+.PHONY : src/helper/Timer.s
+
+# target to generate assembly for a file
+src/helper/Timer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/helper/Timer.cpp.s
+.PHONY : src/helper/Timer.cpp.s
 
 src/helper/fitLP.o: src/helper/fitLP.cpp.o
 .PHONY : src/helper/fitLP.o
@@ -594,15 +594,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... 2opt_RL"
-	@echo "... src/RLmodel/LinearFittedQIteration.o"
-	@echo "... src/RLmodel/LinearFittedQIteration.i"
-	@echo "... src/RLmodel/LinearFittedQIteration.s"
 	@echo "... src/helper/FileIOHelper.o"
 	@echo "... src/helper/FileIOHelper.i"
 	@echo "... src/helper/FileIOHelper.s"
 	@echo "... src/helper/RandVec.o"
 	@echo "... src/helper/RandVec.i"
 	@echo "... src/helper/RandVec.s"
+	@echo "... src/helper/Timer.o"
+	@echo "... src/helper/Timer.i"
+	@echo "... src/helper/Timer.s"
 	@echo "... src/helper/fitLP.o"
 	@echo "... src/helper/fitLP.i"
 	@echo "... src/helper/fitLP.s"

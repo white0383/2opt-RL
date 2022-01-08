@@ -51,11 +51,12 @@ add_executable(${PROJECT_NAME}
   ./src/model/Distance.cpp
   ./src/model/Tour.cpp
   ./src/model/Arguments.cpp
-  ./src/RLmodel/LinearFittedQIteration.cpp
+  #./src/RLmodel/LinearFittedQIteration.cpp
   ./src/helper/FileIOHelper.cpp
   ./src/helper/mt19937ar.cpp
   ./src/helper/RandVec.cpp
   ./src/helper/fitLP.cpp
+  ./src/helper/Timer.cpp
   ./src/solver/initial_solution/GenerateInitialSolution.cpp
   ./src/solver/initial_solution/method/RandomTour.cpp
   ./src/solver/initial_solution/method/NearestNeighbor.cpp

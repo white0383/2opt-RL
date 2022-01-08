@@ -168,14 +168,14 @@ namespace ArgumentsHelper{
       //Check parametor of theta vector initialization and time-limit are non-negative
       double theta_INITPARA = realArgs[3];
       double secLmt = realArgs[5];
-      if(!((theta_INITPARA > 0) && (secLmt > 0) )){
-        string expName = "ERROR : improper theta_INITPARA or secLmt value";
-        string expDesc = "please check 4,6th double argument";
-        string expDesc2 = "your input is theta_INITPARA : " + to_string(theta_INITPARA) + " secLmt : " + to_string(secLmt);
-        string expDesc3 = "they should be non-negative";
-        vector<string> expVec = {expName,expDesc,expDesc2,expDesc3};
-        throw expVec;  
-      }
+      //if(!((theta_INITPARA > 0) && (secLmt > 0) )){
+      //  string expName = "ERROR : improper theta_INITPARA or secLmt value";
+      //  string expDesc = "please check 4,6th double argument";
+      //  string expDesc2 = "your input is theta_INITPARA : " + to_string(theta_INITPARA) + " secLmt : " + to_string(secLmt);
+      //  string expDesc3 = "they should be non-negative";
+      //  vector<string> expVec = {expName,expDesc,expDesc2,expDesc3};
+      //  throw expVec;  
+      //}
     } catch(vector<string> expS) {
       for(string exp : expS) cout << exp << endl;
       exit(1);
@@ -324,7 +324,6 @@ void Arguments::setU(){
     farthestNodeFromI = this->V.distOrder[i][this->V.getN()-1];
     farthestDistFromI = this->V.distMatrix[i][farthestNodeFromI];
     if(rst_maxDIJ < farthestDistFromI){
-      cout << farthestDistFromI << endl;
       rst_maxDIJ = farthestDistFromI;
     }
   }

@@ -8,8 +8,25 @@
 #include "../model/Arguments.h"
 #include "../model/Tour.h"
 
-class MDP;
 class DataSet;
+class LinearFittedQIteration;
+
+class MDP{
+  public:
+    int time;
+    int epi;
+    int step;
+    double sec;
+    Tour state;
+    pair<int,int> action;
+    double reward;
+    vector<double> featureVector;
+  
+  public:
+    MDP(pair<int,int>& a, double r, LinearFittedQIteration& LinQ);
+
+    void decodeFeatureVector(LinearFittedQIteration& LinQ);
+};
 
 class LinearFittedQIteration{
   public:
@@ -210,23 +227,6 @@ class DataSet{
   // for Debugging
   public:
     void printInfo();
-};
-
-class MDP{
-  public:
-    int time;
-    int epi;
-    int step;
-    double sec;
-    Tour state;
-    pair<int,int> action;
-    double reward;
-    vector<double> featureVector;
-  
-  public:
-    MDP(pair<int,int>& a, double r, LinearFittedQIteration& LinQ);
-
-    void decodeFeatureVector(LinearFittedQIteration& LinQ);
 };
 
 #endif //TSP_LINFITQITE_H

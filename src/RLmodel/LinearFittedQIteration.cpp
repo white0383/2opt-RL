@@ -16,6 +16,12 @@
 
 using namespace std;
 
+bool DEBUG = false;
+
+void ECHO(string msg){
+  if(DEBUG) cout << msg << endl;
+}
+
 //========= LinQHelper ===============================================
 namespace LinQHelper {
 
@@ -113,10 +119,13 @@ void LinearFittedQIteration::learn(const Arguments& tspArgs){
   //cout << "===== Learning start =====" << endl;
 
   while(LinearFittedQIteration::checkTerminationCondition(tspArgs) == false){
+    //cout << this->step << endl;
+    //cout << this->spendSec << endl;
     pair<int,int> a_now = this->searchAction(tspArgs); // search 2-opt neib.
     double r_now = this->calcReward(tspArgs);
     MDP mdp_now = MDP(a_now,r_now,*this);
     this->update(a_now,mdp_now,tspArgs);
+    //cout << this->s_now.getCost() << endl;
   }
 
   //cout << "Learning finish" << endl;
@@ -153,13 +162,12 @@ pair<int,int> LinearFittedQIteration::searchAction(const Arguments& tspArgs){
 // Like first improvement
 pair<int,int> LinearFittedQIteration::searchActionRandom(const Arguments& tspArgs){
   int n = this->s_now.getSize();
-  bool improved = true;
+  bool improved = false;
   double amb = 0;
   int i,j,p,pp,q,qp;
   pair<int,int> rst_IJ;
 
-  while(improved){
-    improved = false;
+  while(improved == false){
     vector<int> i_vec = genRandIntVec(n);
 
     for(int i : i_vec){
@@ -217,14 +225,13 @@ pair<int,int> LinearFittedQIteration::searchActionRandom(const Arguments& tspArg
 // Like best improvement
 pair<int,int> LinearFittedQIteration::searchActionGreedy(const Arguments& tspArgs){
   int n = this->s_now.getSize();
-  bool improved = true;
+  bool improved = false;
   double amb = 0;
   int i,j,p,pp,q,qp;
   pair<int,int> rst_IJ;  
   map<double, pair<int,int> > scoreMap;
 
-  while(improved){
-    improved = false;
+  while(improved == false){
     scoreMap.clear();
     vector<int> i_vec = genRandIntVec(n);
 
@@ -268,8 +275,8 @@ pair<int,int> LinearFittedQIteration::searchActionGreedy(const Arguments& tspArg
     }
   } // end while
 
-  this->tourLengthChange = FastTwoOptHelper::getAfterMinusBefore(this->s_now,rst_IJ,tspArgs.V);
   rst_IJ = FastTwoOptHelper::getMaxScoredIJ(scoreMap);
+  this->tourLengthChange = FastTwoOptHelper::getAfterMinusBefore(this->s_now,rst_IJ,tspArgs.V);
   return rst_IJ;
 }
 
@@ -505,13 +512,12 @@ namespace DataSetHelper{
   double calcMaxActionValue(vector<double>& theta, Tour& state, const Arguments& tspArgs){
     int n = state.getSize();
     double amb = 0;
-    bool improved = true; // for check
+    bool improved = false; // for check
     int i,j,p,pp,q,qp;
     double rst_maximumActionValue = -DBL_MAX;
     double tmp_actionValue = 0;
 
-    while(improved){
-      improved = false;
+    while(improved == false){
       vector<int> i_vec = genRandIntVec(n);
 
       for(int i : i_vec){
@@ -539,10 +545,10 @@ namespace DataSetHelper{
 
         for(int Cp = 1; Cp<n;Cp++){
           qp = tspArgs.V.distOrder[pp][Cp];
-          j = state.getPiInv(qp)-q;
+          j = state.getPiInv(qp)-1;
           q = state.getPi(j);
 
-          if(qp == p)break; // for Cp
+          if(qp == p) break; // for Cp
           if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for Cp
 
           amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,tspArgs.V);
@@ -556,8 +562,8 @@ namespace DataSetHelper{
         }// end for Cp
       } // end for i
 
-      if(improved == false) cout << "something wrong in Action search or s_now random shuffle" << endl;
     } // end while
+
     return rst_maximumActionValue;
   } // end calcMaxActionValue
 }

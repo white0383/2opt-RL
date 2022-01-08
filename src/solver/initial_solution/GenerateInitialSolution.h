@@ -2,6 +2,7 @@
 #define TSP_GENINITSOLUTION_H
 
 #include <string>
+#include <random>
 #include "../../model/Tour.h"
 #include "../../model/Graph.h"
 #include "../../model/Arguments.h"
@@ -14,7 +15,7 @@
  * @return Tour : initial solution of TSP
  */
 Tour generateInitialSolution(const Graph& g, const string& method);
-
-Tour generateInitialSolution(const Arguments& tspArgs);
+Tour generateInitialSolution(const Graph& g, const string& method, mt19937& rng);
+Tour generateInitialSolution(const Arguments& tspArgs, mt19937& rng); // with rng
 
 #endif // TSP_GENINITSOLUTION_H

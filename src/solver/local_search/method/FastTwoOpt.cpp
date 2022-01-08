@@ -162,7 +162,6 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
     } // end for i
   } // end while
 
-  cout << "F2OPT : swapnum -> " << swapNum << endl;
   return pi_star;
 }
 
@@ -234,7 +233,6 @@ Tour fastTwoOptBestInP(const Graph& g, Tour& pi, double pr){
     }
   } // end while
 
-  cout << "F2OPTB : swapnum -> " << swapNum << endl;
   return pi_star;
 }
 

@@ -31,3 +31,24 @@ Tour randomTour(const Graph& g){
     exit(1);
   }
 }
+
+Tour randomTour(const Graph& g, mt19937& rng){
+  int cityNum = g.getN();
+
+  // visitOrder is {1,2, ... ,cityNum-1, cityNum}
+  vector<int> visitOrder(cityNum);
+  for(int i=0;i<cityNum;i++){
+    visitOrder[i] = i+1; // +1 : index of g.nodes + 1 = index of Node 
+  }
+
+  shuffle(visitOrder.begin(), visitOrder.end(), rng);
+
+  Tour initTour(visitOrder, g);
+
+  if(initTour.isCompleteTour(g)){
+    return initTour;
+  } else {
+    cout << "ERROR : Initial Solution is not a complete tour" << endl;
+    exit(1);
+  }
+}
