@@ -42,6 +42,8 @@ class Arguments {
     double GREEDY_EPS ; // parameter of epsilon greedy in Action constructor in [0,1]
     double SEC_LIMIT ; // Maximum value of second
 
+    mt19937 rng_tourInit;
+
     //==========================================
     //===== Arguments that are calculated ======
     //==========================================

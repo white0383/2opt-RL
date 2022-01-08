@@ -58,7 +58,7 @@ int main(){
   //**** Methods
   vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299"};
   vector<string> VLSI_instances = {"xqf131", "xqg237", "pma343","xql662"};
-  string tourInitMethod = "FI"; // RT FI
+  string tourInitMethod = "RT"; // RT FI
   string learnTermiCondi = "SEC"; // EPI SEC
   string thetaInitMethod = "ONE"; // UNI GAU ONE
 
@@ -83,7 +83,7 @@ int main(){
   /*********************************/
   /***** Experiment code below *****/
   /*********************************/
-    vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    vector<string> argSTR = { TSPLIB_instances[1], tourInitMethod, learnTermiCondi, thetaInitMethod};
     vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
     vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
     Arguments tspArgs = Arguments(argSTR,argINT,argREA);
@@ -92,17 +92,26 @@ int main(){
     //cout << "2opt-RL : best -> " << LinQ.bestTour.getCost() << endl;
 
     //========== RT,FI with rng test ===========
-    int rngSEED = 1081419;
-    mt19937 rng(rngSEED);
-    Tour a0 = generateInitialSolution(tspArgs.V,tourInitMethod,rng);
-    Tour a1 = generateInitialSolution(tspArgs.V,tourInitMethod,rng);
-    Tour a2 = generateInitialSolution(tspArgs.V,tourInitMethod,rng);
-    Tour a3 = generateInitialSolution(tspArgs.V,tourInitMethod,rng);
-    mt19937 rng1(rngSEED);
+    //int rngSEED = 1081419;
+    string tmpL = "F2OPTB";
+    Tour a0 = generateInitialSolution(tspArgs);
+    Tour a1 = generateInitialSolution(tspArgs);
+    Tour a2 = generateInitialSolution(tspArgs);
+    Tour a3 = generateInitialSolution(tspArgs);
+    Tour a0OPT = searchLocalOpt(tspArgs.V,tmpL,a0);
+    Tour a1OPT = searchLocalOpt(tspArgs.V,tmpL,a1);
+    Tour a2OPT = searchLocalOpt(tspArgs.V,tmpL,a2);
+    Tour a3OPT = searchLocalOpt(tspArgs.V,tmpL,a3);
+
+    mt19937 rng1(SEED);
     Tour b0 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
     Tour b1 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
     Tour b2 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
     Tour b3 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
+    Tour b0OPT = searchLocalOpt(tspArgs.V,tmpL,b0);
+    Tour b1OPT = searchLocalOpt(tspArgs.V,tmpL,b1);
+    Tour b2OPT = searchLocalOpt(tspArgs.V,tmpL,b2);
+    Tour b3OPT = searchLocalOpt(tspArgs.V,tmpL,b3);
 
     a0.setCost(tspArgs.V);
     a1.setCost(tspArgs.V);
@@ -113,10 +122,26 @@ int main(){
     b2.setCost(tspArgs.V);
     b3.setCost(tspArgs.V);
 
+    a0OPT.setCost(tspArgs.V);
+    a1OPT.setCost(tspArgs.V);
+    a2OPT.setCost(tspArgs.V);
+    a3OPT.setCost(tspArgs.V);
+    b0OPT.setCost(tspArgs.V);
+    b1OPT.setCost(tspArgs.V);
+    b2OPT.setCost(tspArgs.V);
+    b3OPT.setCost(tspArgs.V);
+
     cout << " a0 : " << a0.getCost() << " b0 : " << b0.getCost() << endl;
     cout << " a1 : " << a1.getCost() << " b1 : " << b1.getCost() << endl;
     cout << " a2 : " << a2.getCost() << " b2 : " << b2.getCost() << endl;
     cout << " a3 : " << a3.getCost() << " b3 : " << b3.getCost() << endl;
+
+    cout << endl;
+
+    cout << " a0OPT : " << a0OPT.getCost() << " b0OPT : " << b0OPT.getCost() << endl;
+    cout << " a1OPT : " << a1OPT.getCost() << " b1OPT : " << b1OPT.getCost() << endl;
+    cout << " a2OPT : " << a2OPT.getCost() << " b2OPT : " << b2OPT.getCost() << endl;
+    cout << " a3OPT : " << a3OPT.getCost() << " b3OPT : " << b3OPT.getCost() << endl;
 
 /*
     //========== F2OPTB score test ===========

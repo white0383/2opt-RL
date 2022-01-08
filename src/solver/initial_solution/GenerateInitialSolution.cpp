@@ -25,6 +25,7 @@
 #include "GenerateInitialSolution.h"
 #include <iostream>
 #include <string>
+#include <random>
 
 #include "./method/RandomTour.h"
 #include "./method/NearestNeighbor.h"
@@ -119,4 +120,9 @@ Tour generateInitialSolution(const Graph& g, const string& method,  mt19937& rng
 
 Tour generateInitialSolution(const Arguments& tspArgs, mt19937& rng){
   return generateInitialSolution(tspArgs.V, tspArgs.TOUR_INIT_METHOD, rng);
+}
+
+Tour generateInitialSolution(const Arguments& tspArgs){
+  mt19937& rng = const_cast<mt19937&> (tspArgs.rng_tourInit);
+  return generateInitialSolution(tspArgs.V,tspArgs.TOUR_INIT_METHOD,rng);
 }

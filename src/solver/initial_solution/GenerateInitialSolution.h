@@ -17,5 +17,6 @@
 Tour generateInitialSolution(const Graph& g, const string& method);
 Tour generateInitialSolution(const Graph& g, const string& method, mt19937& rng);
 Tour generateInitialSolution(const Arguments& tspArgs, mt19937& rng); // with rng
+Tour generateInitialSolution(const Arguments& tspArgs);
 
 #endif // TSP_GENINITSOLUTION_H

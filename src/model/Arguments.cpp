@@ -252,7 +252,9 @@ Arguments::Arguments() {
   exit(1);
 }
 
-Arguments::Arguments(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs){
+Arguments::Arguments(vector<string>& stringArgs, vector<int>& integerArgs, vector<double>& realArgs):
+  rng_tourInit(integerArgs[6])
+{
   if(ArgumentsHelper::verifyInputData(stringArgs,integerArgs,realArgs)){
     // copy input datas
     this->TSP_INSTANCE_NAME = stringArgs[0];
