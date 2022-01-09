@@ -3,4 +3,4 @@ build/*
 result/
 
 # exception to the rule
-!sbuild/.gitkeep
+!build/.gitkeep
