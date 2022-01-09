@@ -18,6 +18,8 @@
  * 10 2OPTP : 2-opt p -> do 2OPTB in probability p or 2OPTL
  * 11 F2OPTP : fast 2-opt p -> do F2OPTB in probability p or F2OPTL
  * 12 2OPTOP : 2-opt order p -> do 2OPTOB in probability p or 2OPTOL
+ * 
+ * 13 F2OPTM : mix F2OPT and F2OPTB
  * ----- not yet implemented (written in 2021 11 13 15:15)
  * A 3OPT : 3-opt
  * B LK : Lin–Kernighan method
@@ -80,7 +82,7 @@ Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi){
   }
 }
 
-Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi, double p){
+Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi, double pr){
   /**
    * There are several ways to avoid if-else statement like below,
    * but this is much easier to read and manage.
@@ -92,20 +94,22 @@ Tour searchLocalOpt(const Graph& g, const string& method, Tour& pi, double p){
     cout << "ERROR : Tour solution is not a complete tour" << endl;
     exit(1);
   }
-  if((p<0) || (p>1)){
+  if((pr<0) || (pr>1)){
     cout << "ERROR : searchLocalOpt improper p"<< endl;
-    cout << "p should be in [0,1] but your p is " << p << endl;
+    cout << "p should be in [0,1] but your p is " << pr << endl;
     exit(1);
   }
 
   Tour rst = Tour();
 
   if(method.compare("2OPTP") == 0) {
-    return twoOptBestInP(g,pi,p);
+    return twoOptBestInP(g,pi,pr);
   }else if (method.compare("2OPTOP") == 0){
-    return twoOptOrderedBestInP(g,pi,p);
+    return twoOptOrderedBestInP(g,pi,pr);
   }else if (method.compare("F2OPTP") == 0){
-    return fastTwoOptBestInP(g,pi,p);
+    return fastTwoOptBestInP(g,pi,pr);
+  }else if (method.compare("F2OPTM") == 0){
+    return fastTwoOptMix(g,pi,pr);
   }else {
     //後でthrow文で書き直す
     cout << "ERROR : invalid Local Search method name" << endl;

@@ -22,6 +22,7 @@ Tour fastTwoOpt(const Graph& g, Tour& pi);
 Tour fastTwoOptBestInP(const Graph& g, Tour& pi, double pr);
 Tour fastTwoOptBest(const Graph& g, Tour& pi);
 Tour fastTwoOptLeast(const Graph& g, Tour& pi);
+Tour fastTwoOptMix(const Graph& g, Tour& pi, double pr);
 
 // for recycle code in LinQ
 namespace FastTwoOptHelper{

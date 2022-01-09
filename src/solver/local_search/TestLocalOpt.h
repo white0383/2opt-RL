@@ -19,10 +19,12 @@ class LocalSearchTester{
     double secLimit;
     vector<pair<int, double> > bestScoreVec;
     int initTourCount;
+    double pr;
 
   public:
     LocalSearchTester(const Arguments& tspArgs, string& LOCAL_METHOD);
 
+    void setPr(double pr);
     void run(const Arguments& tspArgs);
 };
 

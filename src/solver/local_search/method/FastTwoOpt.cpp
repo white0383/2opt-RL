@@ -66,7 +66,7 @@ namespace FastTwoOptHelper{
         pi.swap(i+1,j);
         i++;
         j--;
-      }while(j - i > 0);
+      }while((j - i) > 1);
     }
   }
 
@@ -168,7 +168,7 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
 Tour fastTwoOptBestInP(const Graph& g, Tour& pi, double pr){
   //Exception check
   if((pr<0) || (pr>1)){
-    cout << "ERROR : twoOptBestOrderedInP improper input p\n";
+    cout << "ERROR : fastTwoOptBestInP improper input p\n";
     cout << "p should be in [0,1]" << endl;
     cout << "yout p : " << pr << endl;
     exit(1); 
@@ -242,6 +242,104 @@ Tour fastTwoOptBest(const Graph& g, Tour& pi){
 }
 Tour fastTwoOptLeast(const Graph& g, Tour& pi){
   return fastTwoOptBestInP(g,pi,0);
+}
+
+Tour fastTwoOptMix(const Graph& g, Tour& pi, double pr){
+  //Exception check
+  if((pr<0) || (pr>1)){
+    cout << "ERROR : fastTwoOptBestMix improper input p\n";
+    cout << "p should be in [0,1]" << endl;
+    cout << "yout p : " << pr << endl;
+    exit(1); 
+  }  
+
+  Tour pi_star = pi;
+  int n = pi_star.getSize();
+  bool improved = true;
+
+  bool isSkipped_firstImp = true;
+  bool isFirstImp = true;
+  map<double, pair<int,int> > scoreMap;
+  int swapNum = 0;
+  
+  while(improved){
+    improved = false;
+    isSkipped_firstImp = false;
+
+    vector<int> i_vec = genRandIntVec(n);
+    int i,j,p,pp,q,qp;
+    double amb=0;
+    if(pr > genrand_real3()){
+      isFirstImp = true;
+    } else {
+      isFirstImp = false;
+    }
+    scoreMap.clear();
+
+    for(int i : i_vec){
+      p = pi_star.getPi(i);
+      pp = pi_star.getPi(i+1);
+
+      for(int C = 1; C < n ; C++){
+        q = g.distOrder[p][C];
+        j = pi_star.getPiInv(q);
+        qp = pi_star.getPi(j+1);
+
+        if(q == pp) break; // for C
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for C
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,g);
+        if(amb < 0){
+          improved = true;
+          if(isFirstImp){ // first Improvement
+            isSkipped_firstImp = true;
+            swapNum++;
+            FastTwoOptHelper::swapTwoOpt(pi_star,i,j);
+            break;
+          } else { // best Improvement
+            scoreMap[-amb] = make_pair(i,j);
+          }
+
+        }
+      } // end for C
+      if(improved && isSkipped_firstImp){ // first Improvement
+        break; // for i
+      }
+
+      for(int Cp=1;Cp < n ; Cp++){
+        qp = g.distOrder[pp][Cp];
+        j = pi_star.getPiInv(qp) -1;
+        q = pi_star.getPi(j);
+
+        if(qp == p) break; // for Cp
+        if(FastTwoOptHelper::isAdjacent(i,j,n)) continue; // for Cp
+
+        amb = FastTwoOptHelper::getAfterMinusBefore(p,pp,q,qp,g);
+        if(amb < 0){
+          improved = true;
+          if(isFirstImp){ // first Improvement
+            isSkipped_firstImp = true;
+            swapNum++;
+            FastTwoOptHelper::swapTwoOpt(pi_star,i,j);
+            break;
+          } else { // best Improvement
+            scoreMap[-amb] = make_pair(i,j);
+          }
+        }
+      } // end for Cp
+      if(improved && isSkipped_firstImp){ // first Improvement
+        break; // for i
+      }
+    } // end for i
+
+    if(improved && !(isFirstImp)){ // best Improvement
+      FastTwoOptHelper::swapTwoOpt(pi_star, FastTwoOptHelper::getMaxScoredIJ(scoreMap));
+      swapNum++;
+    }
+
+  } // end while
+
+  return pi_star;
 }
 
 //========= Fast 2-opt big-j ========

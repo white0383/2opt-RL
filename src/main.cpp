@@ -80,7 +80,7 @@ int main(){
   //**** Other Hyperparameters
   int SEED = 1070466; // Jan 7th 01:23
   int EPILMT = 50;
-  double secLmt = 60.0;
+  double secLmt = 3.0;
 
   /*********************************/
   /***** Experiment code below *****/
@@ -90,7 +90,7 @@ int main(){
     //vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
     //Arguments tspArgs = Arguments(argSTR,argINT,argREA);
 
-/* F2OPT vs RL test. alpha, beta, gamma, lambda, h fix*/
+/* Test F2OPTM's performance */
     alpha = 4.0;
     beta = 0.5;
     gamma = 0.35;
@@ -99,9 +99,9 @@ int main(){
     vector<string> TSPs = TSPLIB_KRO100s;
     vector<int> Ts = {100,200,400,800,1600,3200};
     vector<int> HMINs = {3,4,5,6};
-    string rstFileHead = "hypParaSearchRst";
+    string rstFileHead = "F2OPTMrst";
     string rstFileTail = ".csv";
-    string localMethod = "F2OPTB";
+    string localMethod = "F2OPTM";
 
     Arguments* tspArgs;
     LinearFittedQIteration* LinQ;
@@ -111,14 +111,17 @@ int main(){
     vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
     vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
+    string rstFileName = rstFileHead + rstFileTail;
+    ofstream rst_file(rstFileName);
     for(string TSP : TSPs){
       argSTR[0] = TSP;
-      string rstFileName = rstFileHead + TSP + rstFileTail;
-      ofstream rst_file(rstFileName);
+      //string rstFileName = rstFileHead + TSP + rstFileTail;
+      //ofstream rst_file(rstFileName);
       rst_file << "HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine \n";
       for(int seed : SEEDs){
         argINT[6] = seed;
         tspArgs = new Arguments(argSTR, argINT, argREA);
+        /*
         for(int t : Ts){
           tspArgs->T = t;
           tspArgs->TMAX = t * 3;
@@ -150,12 +153,14 @@ int main(){
             delete LinQ;
           }
         }
+        */
 
         tspArgs->resetRNG();
         LStester = new LocalSearchTester(*tspArgs,localMethod);
+        LStester->setPr(greedyEps);   
         LStester->run(*tspArgs);
         // print LStester info
-        rst_file << "F2OPTB ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        rst_file << "F2OPTB ,"<< TSP << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
         for(int i=0;i<15;i++){
           rst_file << " ,";
         } 
@@ -168,9 +173,10 @@ int main(){
         delete LStester;
       }
 
-      rst_file.close();
+      //rst_file.close();
       //delete tspArgs;
     }
+    rst_file.close();
 
 
 // */
