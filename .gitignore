@@ -1,0 +1,6 @@
+# exclude everything
+build/*
+result/
+
+# exception to the rule
+!build/.gitkeep
