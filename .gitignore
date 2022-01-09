@@ -1,6 +1,6 @@
 # exclude everything
-build/*
-result/
+bbuild/*
+rresult/
 
 # exception to the rule
-!build/.gitkeep
+!bbuild/.gitkeep

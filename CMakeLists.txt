@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(2opt_RL)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 add_compile_options(-D IL_STD -std=c++17)
 
 set(CPLEX_DIR "/Applications/CPLEX_Studio1210")
@@ -9,38 +8,53 @@ set(dir_cplex "${CPLEX_DIR}/cplex/")
 set(dir_cpoptimizer "${CPLEX_DIR}/cpoptimizer/")
 set(dir_concert "${CPLEX_DIR}/concert/")
 
+set(CPLEX_DIR2 "/Applications/CPLEX_Studio201")
+set(dir_cplex2 "${CPLEX_DIR2}/cplex/")
+set(dir_cpoptimizer2 "${CPLEX_DIR2}/cpoptimizer/")
+set(dir_concert2 "${CPLEX_DIR2}/concert/")
+
 find_library(
   LCPLEX
   NAMES libcplex.a 
-  HINTS ${dir_cplex}/lib/x86-64_osx/static_pic/
+  HINTS 
+    ${dir_cplex}/lib/x86-64_osx/static_pic/
+    ${dir_cplex2}/lib/x86-64_osx/static_pic/
   REQUIRED
 )
 
 find_library(
   LCPLEXDISTMIP
   NAMES libcplexdistmip.a
-  HINTS ${dir_cplex}/lib/x86-64_osx/static_pic
+  HINTS 
+    ${dir_cplex}/lib/x86-64_osx/static_pic
+    ${dir_cplex2}/lib/x86-64_osx/static_pic
   REQUIRED
 )
 
 find_library(
   LILOCPLEX
   NAMES libilocplex.a
-  HINTS ${dir_cplex}/lib/x86-64_osx/static_pic
+  HINTS 
+    ${dir_cplex}/lib/x86-64_osx/static_pic
+    ${dir_cplex2}/lib/x86-64_osx/static_pic
   REQUIRED
 )
 
 find_library(
   LCONCERT 
   NAMES libconcert.a
-  HINTS ${dir_concert}/lib/x86-64_osx/static_pic
+  HINTS 
+    ${dir_concert}/lib/x86-64_osx/static_pic
+    ${dir_concert2}/lib/x86-64_osx/static_pic
   REQUIRED
 )
 
 find_library(
   LCP
   NAMES libcp.a
-  HINTS ${dir_cpoptimizer}/lib/x86-64_osx/static_pic
+  HINTS 
+    ${dir_cpoptimizer}/lib/x86-64_osx/static_pic
+    ${dir_cpoptimizer2}/lib/x86-64_osx/static_pic
   REQUIRED
 )
 
@@ -73,6 +87,9 @@ PUBLIC
   ${dir_cplex}/include 
   ${dir_cpoptimizer}/include
   ${dir_concert}/include
+  ${dir_cplex2}/include 
+  ${dir_cpoptimizer2}/include
+  ${dir_concert2}/include
 )
 
 target_link_libraries(${PROJECT_NAME}

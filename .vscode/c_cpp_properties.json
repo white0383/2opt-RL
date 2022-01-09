@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/Applications/CPLEX_Studio1210/cplex/include/",
-                "/Applications/CPLEX_Studio1210/concert/include/"
+                "/Applications/CPLEX_Studio1210/concert/include/",
+                "/Applications/CPLEX_Studio201/cplex/include/",
+                "/Applications/CPLEX_Studio201/concert/include/"
             ],
             "defines": [],
             "macFrameworkPath": [],
