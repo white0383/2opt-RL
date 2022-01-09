@@ -330,6 +330,12 @@ void Arguments::setU(){
     }
   }
 
-  double rst_U = rst_maxDIJ * this->V.getN();
+  double rst_U = rst_maxDIJ * this->V.getN() ;
   this->U = rst_U;
+}
+
+void Arguments::resetRNG(){
+  mt19937 newRNG(this->SEED);
+
+  this->rng_tourInit = newRNG;
 }

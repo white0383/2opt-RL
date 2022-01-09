@@ -5,7 +5,8 @@
 
 // includes MUST
 #include "./model/Arguments.h"
-//#include "./RLmodel/LinearFittedQIteration.h"
+#include "./RLmodel/LinearFittedQIteration.h"
+#include "./solver/local_search/TestLocalOpt.h"
 
 // includes experiment
 #include <ctime>
@@ -57,6 +58,7 @@ int main(){
   /************************************/
   //**** Methods
   vector<string> TSPLIB_instances = {"eil51", "rd100", "pr152", "kroA200", "pr299"};
+  vector<string> TSPLIB_KRO100s = {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
   vector<string> VLSI_instances = {"xqf131", "xqg237", "pma343","xql662"};
   string tourInitMethod = "RT"; // RT FI
   string learnTermiCondi = "SEC"; // EPI SEC
@@ -66,101 +68,159 @@ int main(){
   int T = 1200; // the number of samples for each learning
   int TMAX = 3600; // the number of steps per theta update
   int MMAX = 6000; // maximum size of MDP queue
-  int LAMBDA = 5; // parameter in calculating rho
+  int LAMBDA = 13; // parameter in calculating rho
   int HMIN = 3; // minimum axis divisions in partition
-  int HMAX = 5; // maximum axis divisions in partition
-  double alpha = 3.0; // in reward of MDP
-  double beta = 0.95; // in reward of MDP
-  double gamma = 0.95; // discount factor
+  int HMAX = 6; // maximum axis divisions in partition
+  double alpha = 4.0; // in reward of MDP
+  double beta = 0.5; // in reward of MDP
+  double gamma = 0.35; // discount factor
   double thetaInitPara = -1.0; 
   double greedyEps = 0.1; // probability of random action
 
   //**** Other Hyperparameters
-  int SEED = 1071556; // Jan 7th 01:23
+  int SEED = 1070466; // Jan 7th 01:23
   int EPILMT = 50;
   double secLmt = 60.0;
 
   /*********************************/
   /***** Experiment code below *****/
   /*********************************/
-    vector<string> argSTR = { TSPLIB_instances[1], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    //vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    //vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
+    //vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
+    //Arguments tspArgs = Arguments(argSTR,argINT,argREA);
+
+/* F2OPT vs RL test. alpha, beta, gamma, lambda, h fix*/
+    alpha = 4.0;
+    beta = 0.5;
+    gamma = 0.35;
+    LAMBDA = 13;
+    vector<int> SEEDs = {1245,2316,1541,7461,8459};
+    vector<string> TSPs = TSPLIB_KRO100s;
+    vector<int> Ts = {100,200,400,800,1600,3200};
+    vector<int> HMINs = {3,4,5,6};
+    string rstFileHead = "hypParaSearchRst";
+    string rstFileTail = ".csv";
+    string localMethod = "F2OPTB";
+
+    Arguments* tspArgs;
+    LinearFittedQIteration* LinQ;
+    LocalSearchTester* LStester;
+
+    vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
     vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
     vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
-    Arguments tspArgs = Arguments(argSTR,argINT,argREA);
 
-    //LinQ.learn(tspArgs);
-    //cout << "2opt-RL : best -> " << LinQ.bestTour.getCost() << endl;
+    for(string TSP : TSPs){
+      argSTR[0] = TSP;
+      string rstFileName = rstFileHead + TSP + rstFileTail;
+      ofstream rst_file(rstFileName);
+      rst_file << "HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine \n";
+      for(int seed : SEEDs){
+        argINT[6] = seed;
+        tspArgs = new Arguments(argSTR, argINT, argREA);
+        for(int t : Ts){
+          tspArgs->T = t;
+          tspArgs->TMAX = t * 3;
+          tspArgs->MMAX = t * 5;
+          for(int hmin : HMINs){
+            tspArgs->HMIN = hmin;
+            tspArgs->resetRNG();
+            cout << t << " " << hmin << endl;
 
-    //========== RT,FI with rng test ===========
-    //int rngSEED = 1081419;
-    string tmpL = "F2OPTB";
-    Tour a0 = generateInitialSolution(tspArgs);
-    Tour a1 = generateInitialSolution(tspArgs);
-    Tour a2 = generateInitialSolution(tspArgs);
-    Tour a3 = generateInitialSolution(tspArgs);
-    Tour a0OPT = searchLocalOpt(tspArgs.V,tmpL,a0);
-    Tour a1OPT = searchLocalOpt(tspArgs.V,tmpL,a1);
-    Tour a2OPT = searchLocalOpt(tspArgs.V,tmpL,a2);
-    Tour a3OPT = searchLocalOpt(tspArgs.V,tmpL,a3);
+            LinQ = new LinearFittedQIteration(*tspArgs);
+            LinQ->learn(*tspArgs);
+            // print LinQ info
+            rst_file << tspArgs->HMIN << " ,";
+            rst_file << tspArgs->T << " ,";
+            rst_file << tspArgs->SEED << " ,";
+            rst_file << LinQ->bestTour.getCost() << " ,";
+            rst_file << LinQ->initTourCount << " ,";
+            rst_file << LinQ->time << " ,";
+            rst_file << LinQ->epi << " ,";
+            for(time_t time : LinQ->timeVec){
+              rst_file << (double)time/CLOCKS_PER_SEC << " ,";
+            }
+            for(pair<int,double> p : LinQ->bestScoreVec){
+              rst_file << p.first << " ," << p.second << " ,";
+            }
+            rst_file << "\n";
 
-    mt19937 rng1(SEED);
-    Tour b0 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
-    Tour b1 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
-    Tour b2 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
-    Tour b3 = generateInitialSolution(tspArgs.V,tourInitMethod,rng1);
-    Tour b0OPT = searchLocalOpt(tspArgs.V,tmpL,b0);
-    Tour b1OPT = searchLocalOpt(tspArgs.V,tmpL,b1);
-    Tour b2OPT = searchLocalOpt(tspArgs.V,tmpL,b2);
-    Tour b3OPT = searchLocalOpt(tspArgs.V,tmpL,b3);
 
-    a0.setCost(tspArgs.V);
-    a1.setCost(tspArgs.V);
-    a2.setCost(tspArgs.V);
-    a3.setCost(tspArgs.V);
-    b0.setCost(tspArgs.V);
-    b1.setCost(tspArgs.V);
-    b2.setCost(tspArgs.V);
-    b3.setCost(tspArgs.V);
+            delete LinQ;
+          }
+        }
 
-    a0OPT.setCost(tspArgs.V);
-    a1OPT.setCost(tspArgs.V);
-    a2OPT.setCost(tspArgs.V);
-    a3OPT.setCost(tspArgs.V);
-    b0OPT.setCost(tspArgs.V);
-    b1OPT.setCost(tspArgs.V);
-    b2OPT.setCost(tspArgs.V);
-    b3OPT.setCost(tspArgs.V);
+        tspArgs->resetRNG();
+        LStester = new LocalSearchTester(*tspArgs,localMethod);
+        LStester->run(*tspArgs);
+        // print LStester info
+        rst_file << "F2OPTB ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        for(int i=0;i<15;i++){
+          rst_file << " ,";
+        } 
+        for(pair<int,double> p : LStester->bestScoreVec){
+          rst_file << p.first << " ," << p.second << " ,";
+        }
+        rst_file << "\n";
 
-    cout << " a0 : " << a0.getCost() << " b0 : " << b0.getCost() << endl;
-    cout << " a1 : " << a1.getCost() << " b1 : " << b1.getCost() << endl;
-    cout << " a2 : " << a2.getCost() << " b2 : " << b2.getCost() << endl;
-    cout << " a3 : " << a3.getCost() << " b3 : " << b3.getCost() << endl;
-
-    cout << endl;
-
-    cout << " a0OPT : " << a0OPT.getCost() << " b0OPT : " << b0OPT.getCost() << endl;
-    cout << " a1OPT : " << a1OPT.getCost() << " b1OPT : " << b1OPT.getCost() << endl;
-    cout << " a2OPT : " << a2OPT.getCost() << " b2OPT : " << b2OPT.getCost() << endl;
-    cout << " a3OPT : " << a3OPT.getCost() << " b3OPT : " << b3OPT.getCost() << endl;
-
-/*
-    //========== F2OPTB score test ===========
-    double F2OPTB_spentSec = 0;
-    time_t F2OPTB_start = clock();
-    double F2OPTB_bestScore = DBL_MAX;
-    string LOCAL_METHOD = "F2OPT";
-    while(F2OPTB_spentSec < secLmt){
-      Tour initTour = generateInitialSolution(tspArgs);
-      Tour optTour = searchLocalOpt(tspArgs.V, LOCAL_METHOD,initTour);
-      optTour.setCost(tspArgs.V);
-    
-      if(F2OPTB_bestScore > optTour.getCost()){
-        F2OPTB_bestScore = optTour.getCost();
+        delete tspArgs;
+        delete LStester;
       }
 
-      F2OPTB_spentSec = (double)(clock() - F2OPTB_start) / CLOCKS_PER_SEC;
+      rst_file.close();
+      //delete tspArgs;
     }
-    cout << "F2OPTB : best -> " << F2OPTB_bestScore << endl;
+
+
+// */
+
+/* F2OPTB vs RL test
+    Arguments* tspArgsFB;
+    Arguments* tspArgsRL;
+    LinearFittedQIteration* LinQ;
+    LocalSearchTester* LStester;
+  
+    int testNum = 10;
+    string LOCAL_METHOD = "F2OPTB";
+    for(int testIndex = 0; testIndex < testNum ; testIndex++){
+      argINT[6] += 1;
+
+      cout << testIndex << endl;
+
+      tspArgsRL = new Arguments(argSTR,argINT,argREA);
+      tspArgsFB = new Arguments(argSTR,argINT,argREA);
+
+      LinQ = new LinearFittedQIteration(*tspArgsRL);
+      LinQ->learn(*tspArgsRL);
+
+      LStester = new LocalSearchTester(*tspArgsFB,LOCAL_METHOD);
+      LStester->run(*tspArgsFB);
+
+      cout << "test " << testIndex << endl;
+      cout << "  LinQ best : " << LinQ->bestTour.getCost();
+      cout << "  LStester best : " << LStester->bestScore << endl;
+
+      cout << "  LinQ time line : ";
+      cout << LinQ->initTourCount << " initTours ";
+      cout << LinQ->epi << " epis " ;
+      cout << LinQ->time << " ite " << endl;
+      for(auto foo : LinQ->bestScoreVec){
+        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
+      }
+
+      cout << "  LStester time line : ";
+      cout << LStester->initTourCount << " initTours" << endl;
+      for(auto foo : LStester->bestScoreVec){
+        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
+      }
+
+      delete tspArgsRL;
+      delete tspArgsFB;
+      delete LinQ;
+      delete LStester;
+    }
+
 */
 
 /*

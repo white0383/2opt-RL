@@ -1,0 +1,19 @@
+/*
+    //========== F2OPTB score test ===========
+    double F2OPTB_spentSec = 0;
+    time_t F2OPTB_start = clock();
+    double F2OPTB_bestScore = DBL_MAX;
+    string LOCAL_METHOD = "F2OPT";
+    while(F2OPTB_spentSec < secLmt){
+      Tour initTour = generateInitialSolution(tspArgs);
+      Tour optTour = searchLocalOpt(tspArgs.V, LOCAL_METHOD,initTour);
+      optTour.setCost(tspArgs.V);
+    
+      if(F2OPTB_bestScore > optTour.getCost()){
+        F2OPTB_bestScore = optTour.getCost();
+      }
+
+      F2OPTB_spentSec = (double)(clock() - F2OPTB_start) / CLOCKS_PER_SEC;
+    }
+    cout << "F2OPTB : best -> " << F2OPTB_bestScore << endl;
+*/

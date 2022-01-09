@@ -51,7 +51,7 @@ add_executable(${PROJECT_NAME}
   ./src/model/Distance.cpp
   ./src/model/Tour.cpp
   ./src/model/Arguments.cpp
-  #./src/RLmodel/LinearFittedQIteration.cpp
+  ./src/RLmodel/LinearFittedQIteration.cpp
   ./src/helper/FileIOHelper.cpp
   ./src/helper/mt19937ar.cpp
   ./src/helper/RandVec.cpp
@@ -62,6 +62,7 @@ add_executable(${PROJECT_NAME}
   ./src/solver/initial_solution/method/NearestNeighbor.cpp
   ./src/solver/initial_solution/method/FarthestInsertion.cpp
   ./src/solver/local_search/SearchLocalOpt.cpp
+  ./src/solver/local_search/TestLocalOpt.cpp
   ./src/solver/local_search/method/TwoOpt.cpp
   ./src/solver/local_search/method/TwoOptOrdered.cpp
   ./src/solver/local_search/method/FastTwoOpt.cpp

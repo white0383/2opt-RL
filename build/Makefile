@@ -129,6 +129,30 @@ depend:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/build
 .PHONY : 2opt_RL/fast
 
+src/RLmodel/LinearFittedQIteration.o: src/RLmodel/LinearFittedQIteration.cpp.o
+.PHONY : src/RLmodel/LinearFittedQIteration.o
+
+# target to build an object file
+src/RLmodel/LinearFittedQIteration.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.o
+.PHONY : src/RLmodel/LinearFittedQIteration.cpp.o
+
+src/RLmodel/LinearFittedQIteration.i: src/RLmodel/LinearFittedQIteration.cpp.i
+.PHONY : src/RLmodel/LinearFittedQIteration.i
+
+# target to preprocess a source file
+src/RLmodel/LinearFittedQIteration.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.i
+.PHONY : src/RLmodel/LinearFittedQIteration.cpp.i
+
+src/RLmodel/LinearFittedQIteration.s: src/RLmodel/LinearFittedQIteration.cpp.s
+.PHONY : src/RLmodel/LinearFittedQIteration.s
+
+# target to generate assembly for a file
+src/RLmodel/LinearFittedQIteration.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/RLmodel/LinearFittedQIteration.cpp.s
+.PHONY : src/RLmodel/LinearFittedQIteration.cpp.s
+
 src/helper/FileIOHelper.o: src/helper/FileIOHelper.cpp.o
 .PHONY : src/helper/FileIOHelper.o
 
@@ -513,6 +537,30 @@ src/solver/local_search/SearchLocalOpt.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/SearchLocalOpt.cpp.s
 .PHONY : src/solver/local_search/SearchLocalOpt.cpp.s
 
+src/solver/local_search/TestLocalOpt.o: src/solver/local_search/TestLocalOpt.cpp.o
+.PHONY : src/solver/local_search/TestLocalOpt.o
+
+# target to build an object file
+src/solver/local_search/TestLocalOpt.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/TestLocalOpt.cpp.o
+.PHONY : src/solver/local_search/TestLocalOpt.cpp.o
+
+src/solver/local_search/TestLocalOpt.i: src/solver/local_search/TestLocalOpt.cpp.i
+.PHONY : src/solver/local_search/TestLocalOpt.i
+
+# target to preprocess a source file
+src/solver/local_search/TestLocalOpt.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/TestLocalOpt.cpp.i
+.PHONY : src/solver/local_search/TestLocalOpt.cpp.i
+
+src/solver/local_search/TestLocalOpt.s: src/solver/local_search/TestLocalOpt.cpp.s
+.PHONY : src/solver/local_search/TestLocalOpt.s
+
+# target to generate assembly for a file
+src/solver/local_search/TestLocalOpt.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/2opt_RL.dir/build.make CMakeFiles/2opt_RL.dir/src/solver/local_search/TestLocalOpt.cpp.s
+.PHONY : src/solver/local_search/TestLocalOpt.cpp.s
+
 src/solver/local_search/method/FastTwoOpt.o: src/solver/local_search/method/FastTwoOpt.cpp.o
 .PHONY : src/solver/local_search/method/FastTwoOpt.o
 
@@ -594,6 +642,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... 2opt_RL"
+	@echo "... src/RLmodel/LinearFittedQIteration.o"
+	@echo "... src/RLmodel/LinearFittedQIteration.i"
+	@echo "... src/RLmodel/LinearFittedQIteration.s"
 	@echo "... src/helper/FileIOHelper.o"
 	@echo "... src/helper/FileIOHelper.i"
 	@echo "... src/helper/FileIOHelper.s"
@@ -642,6 +693,9 @@ help:
 	@echo "... src/solver/local_search/SearchLocalOpt.o"
 	@echo "... src/solver/local_search/SearchLocalOpt.i"
 	@echo "... src/solver/local_search/SearchLocalOpt.s"
+	@echo "... src/solver/local_search/TestLocalOpt.o"
+	@echo "... src/solver/local_search/TestLocalOpt.i"
+	@echo "... src/solver/local_search/TestLocalOpt.s"
 	@echo "... src/solver/local_search/method/FastTwoOpt.o"
 	@echo "... src/solver/local_search/method/FastTwoOpt.i"
 	@echo "... src/solver/local_search/method/FastTwoOpt.s"

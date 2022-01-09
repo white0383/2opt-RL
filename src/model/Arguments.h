@@ -65,6 +65,7 @@ class Arguments {
     void setPartitions();
     void setPartitionBegins();
     void setU();
+    void resetRNG();
 };
 
 #endif // TSP_ARGUMENTS_H

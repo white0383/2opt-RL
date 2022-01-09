@@ -5,6 +5,7 @@
 #include <ctime> // time_t, clock()
 #include <deque> 
 #include <utility> // std::pair
+#include <map>
 #include "../model/Arguments.h"
 #include "../model/Tour.h"
 
@@ -56,6 +57,9 @@ class LinearFittedQIteration{
     int epi; 
     int MAXepi; // const EPI_LIMIT in tspArgs
 
+    int initTourCount;
+    vector<pair<int,double> > bestScoreVec;
+
     // Focusing Tour : State of now
     Tour s_now;
 
@@ -79,6 +83,23 @@ class LinearFittedQIteration{
     double tourLengthChange;
     vector<double> featureVector_state;
     vector<pair<int,double> > featureVector_action;
+
+    /**
+     * 0 : learn
+     * 1 : action search
+     * 2 : reward calc
+     * 3 : mdp construct
+     * 4 : update
+     * 5 : replayBuffer update
+     * 6 : state update
+     * 7 : best info update
+     * 8 : featureVector update
+     * 9 : theta update
+     * 
+     * 0 is sum of 1 ~ 4
+     * 4 is sum of 5 ~ 9
+     */
+    vector<time_t> timeVec;
 
   public:
     // constructor
@@ -192,11 +213,24 @@ class LinearFittedQIteration{
      */
     void updateTheta(const Arguments& tspArgs);
 
+    /**
+     * update bestScoreVec
+     * 
+     * when bestScoreVec's length is 1,
+     * it means the model is searching 2opt local optima of the first initTour.
+     * so, update its first member's second element to bestTour.getCost();
+     * 
+     * otherwise, 
+     * pushback (initTourCount, bestTour.getCost()) to bestScoreVec
+     */
+    void updateBestScoreVec();
+
     // Getter
     //vector<double> getTheta();
 
     //For Debugging
     //void printTheta();
+    void printTimeVec();
 };
 
 

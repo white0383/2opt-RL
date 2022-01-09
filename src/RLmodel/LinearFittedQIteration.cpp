@@ -108,6 +108,7 @@ LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
   this->MAXstep = tspArgs.TMAX;
   this->epi = 1;
   this->MAXepi = tspArgs.EPI_LIMIT;
+  this->initTourCount = 0;
 
   LinearFittedQIteration::resetState(tspArgs);
   this->bestTour = this->s_now;
@@ -117,17 +118,33 @@ LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
 
 void LinearFittedQIteration::learn(const Arguments& tspArgs){
   //cout << "===== Learning start =====" << endl;
+  this->timeVec.assign(12,0);
+
+  time_t startLearn = clock();
+
+  time_t startMemo = 0;
 
   while(LinearFittedQIteration::checkTerminationCondition(tspArgs) == false){
-    //cout << this->step << endl;
-    //cout << this->spendSec << endl;
+    
+    startMemo = clock();
     pair<int,int> a_now = this->searchAction(tspArgs); // search 2-opt neib.
+    this->timeVec.at(1) += clock() - startMemo;
+
+    startMemo = clock();
     double r_now = this->calcReward(tspArgs);
+    this->timeVec.at(2) += clock() - startMemo;
+
+    startMemo = clock();
     MDP mdp_now = MDP(a_now,r_now,*this);
+    this->timeVec.at(3) += clock() - startMemo;
+
+    startMemo = clock();
     this->update(a_now,mdp_now,tspArgs);
+    this->timeVec.at(4) += clock() - startMemo;
     //cout << this->s_now.getCost() << endl;
   }
 
+  this->timeVec.at(0) = clock() - startLearn;
   //cout << "Learning finish" << endl;
 }
 
@@ -282,6 +299,7 @@ pair<int,int> LinearFittedQIteration::searchActionGreedy(const Arguments& tspArg
 
 void LinearFittedQIteration::resetState(const Arguments& tspArgs){
   this->s_now = generateInitialSolution(tspArgs);
+  this->initTourCount += 1;
   s_now.setCost(tspArgs.V);
   LinearFittedQIteration::setFeatureVector_state(tspArgs);
 }
@@ -394,19 +412,30 @@ double LinearFittedQIteration::calcActionValue(int p,int pp, int q, int qp, cons
 
 
 void LinearFittedQIteration::update(pair<int,int>& a_now, MDP& mdp_now, const Arguments& tspArgs){
+  time_t startMemo = clock();
+
   // update replayBuffer
   this->updateReplayBuffer(mdp_now, tspArgs);
+  this->timeVec.at(5) += clock() - startMemo;
 
   // update s_now
+  startMemo = clock();
   this->updateStateNow(a_now);
+  this->timeVec.at(6) += clock() - startMemo;
 
   // update bestTime, bestDist
+  startMemo = clock();
   if(this->bestTour.getCost() > this->s_now.getCost()){
     this->bestTour = this->s_now;
+    //cout << "count "<< this->initTourCount <<" best " << this->bestTour.getCost() << endl;;
+    this->updateBestScoreVec();
   }
+  this->timeVec.at(7) += clock() - startMemo;
 
   // update fv
+  startMemo = clock();
   this->updateFeatureVectorState();
+  this->timeVec.at(8) += clock() - startMemo;
 
   // update time, step, spendSec
   this->time += 1;
@@ -417,7 +446,21 @@ void LinearFittedQIteration::update(pair<int,int>& a_now, MDP& mdp_now, const Ar
   if(this->step > this->MAXstep){
     this->step = 1;
     this->epi += 1;
+    startMemo = clock();
     this->updateTheta(tspArgs);
+    this->timeVec.at(9) += clock() - startMemo;
+  }
+}
+
+void LinearFittedQIteration::updateBestScoreVec(){
+  if(this->bestScoreVec.empty()){
+    this->bestScoreVec.emplace_back(make_pair(this->initTourCount, this->bestTour.getCost()));
+    return;
+  } else if(this->initTourCount == this->bestScoreVec.back().first){
+    this->bestScoreVec.back().second = this->bestTour.getCost();
+    return;
+  } else {
+    this->bestScoreVec.emplace_back(make_pair(this->initTourCount, this->bestTour.getCost()));
   }
 }
 
@@ -442,26 +485,30 @@ void LinearFittedQIteration::updateFeatureVectorState(){
 
 void LinearFittedQIteration::updateTheta(const Arguments& tspArgs){
   // make DataSet
+  time_t startMemo = clock();
   DataSet samples = DataSet(tspArgs, *this);
+  this->timeVec.at(10) += clock() - startMemo;
 
+  startMemo = clock();
   this->theta = fitLP(samples.featureVectors,samples.targetValues);
+  this->timeVec.at(11) += clock() - startMemo;
 }
 
-// ================== old LinQ below ===========
-/*
-void LinearFittedQIteration::printWeights(){
-  cout << "EPI : " << this->epi;
-  cout << "dim : " << this->weights.size() << endl;
-  //cout << "Weights : ";
-  //for(auto foo : this->weights) cout << foo << " ";
-  //cout << endl;
-  cout << "None zero :" << endl;
-  for(int i = 0; i < this->weights.size() ; i++){
-    if(this->weights.at(i) != 0){
-      cout << "i : " <<  i << " value : " << this->weights.at(i) << endl;
-    }
-  }
-}*/
+
+void LinearFittedQIteration::printTimeVec(){
+  cout << "  learn : " << (double)this->timeVec.at(0) / CLOCKS_PER_SEC << endl;
+  cout << " action : " << (double)this->timeVec.at(1) / CLOCKS_PER_SEC << endl;
+  cout << " reward : " << (double)this->timeVec.at(2) / CLOCKS_PER_SEC << endl;
+  cout << "    mdp : " << (double)this->timeVec.at(3) / CLOCKS_PER_SEC << endl;
+  cout << " update : " << (double)this->timeVec.at(4) / CLOCKS_PER_SEC << endl;
+  cout << " RepBuf : " << (double)this->timeVec.at(5) / CLOCKS_PER_SEC << endl;
+  cout << "  state : " << (double)this->timeVec.at(6) / CLOCKS_PER_SEC << endl;
+  cout << "   best : " << (double)this->timeVec.at(7) / CLOCKS_PER_SEC << endl;
+  cout << " feavec : " << (double)this->timeVec.at(8) / CLOCKS_PER_SEC << endl;
+  cout << "  theta : " << (double)this->timeVec.at(9) / CLOCKS_PER_SEC << endl;
+  cout << " datSet : " << (double)this->timeVec.at(10) / CLOCKS_PER_SEC << endl;  
+  cout << "  cplex : " << (double)this->timeVec.at(11) / CLOCKS_PER_SEC << endl;
+}
 
 //========= DataSet Helper ========================================
 namespace DataSetHelper{
