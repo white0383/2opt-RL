@@ -1,0 +1,88 @@
+/* Test F2OPTM's performance */
+    alpha = 4.0;
+    beta = 0.5;
+    gamma = 0.35;
+    LAMBDA = 13;
+    vector<int> SEEDs = {1245,2316,1541,7461,8459};
+    vector<string> TSPs = TSPLIB_KRO100s;
+    vector<int> Ts = {100,200,400,800,1600,3200};
+    vector<int> HMINs = {3,4,5,6};
+    string rstFileHead = "F2OPTMrst";
+    string rstFileTail = ".csv";
+    string localMethod = "F2OPTM";
+
+    Arguments* tspArgs;
+    LinearFittedQIteration* LinQ;
+    LocalSearchTester* LStester;
+
+    vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
+    vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
+
+    string rstFileName = rstFileHead + rstFileTail;
+    ofstream rst_file(rstFileName);
+    for(string TSP : TSPs){
+      argSTR[0] = TSP;
+      //string rstFileName = rstFileHead + TSP + rstFileTail;
+      //ofstream rst_file(rstFileName);
+      rst_file << "HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine \n";
+      for(int seed : SEEDs){
+        argINT[6] = seed;
+        tspArgs = new Arguments(argSTR, argINT, argREA);
+        /*
+        for(int t : Ts){
+          tspArgs->T = t;
+          tspArgs->TMAX = t * 3;
+          tspArgs->MMAX = t * 5;
+          for(int hmin : HMINs){
+            tspArgs->HMIN = hmin;
+            tspArgs->resetRNG();
+            cout << t << " " << hmin << endl;
+
+            LinQ = new LinearFittedQIteration(*tspArgs);
+            LinQ->learn(*tspArgs);
+            // print LinQ info
+            rst_file << tspArgs->HMIN << " ,";
+            rst_file << tspArgs->T << " ,";
+            rst_file << tspArgs->SEED << " ,";
+            rst_file << LinQ->bestTour.getCost() << " ,";
+            rst_file << LinQ->initTourCount << " ,";
+            rst_file << LinQ->time << " ,";
+            rst_file << LinQ->epi << " ,";
+            for(time_t time : LinQ->timeVec){
+              rst_file << (double)time/CLOCKS_PER_SEC << " ,";
+            }
+            for(pair<int,double> p : LinQ->bestScoreVec){
+              rst_file << p.first << " ," << p.second << " ,";
+            }
+            rst_file << "\n";
+
+
+            delete LinQ;
+          }
+        }
+        */
+
+        tspArgs->resetRNG();
+        LStester = new LocalSearchTester(*tspArgs,localMethod);
+        LStester->setPr(greedyEps);   
+        LStester->run(*tspArgs);
+        // print LStester info
+        rst_file << "F2OPTB ,"<< TSP << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        for(int i=0;i<15;i++){
+          rst_file << " ,";
+        } 
+        for(pair<int,double> p : LStester->bestScoreVec){
+          rst_file << p.first << " ," << p.second << " ,";
+        }
+        rst_file << "\n";
+
+        delete tspArgs;
+        delete LStester;
+      }
+
+      //rst_file.close();
+      //delete tspArgs;
+    }
+    rst_file.close();
+

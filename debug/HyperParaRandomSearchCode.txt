@@ -1,0 +1,59 @@
+/* Hyper Parameter random searching =========
+  cout << "Start time : ";
+  printTime();
+
+  string fileName = "hyperParameterSearchRstRD100.csv";
+  ofstream rst_file(fileName);
+
+  // write the fist line
+  rst_file << "Best Score" << ", "<<"SEED"<<", " << "HMIN" << ", " << "HMAX" << ", " << "T" << ", " << "TMAX" << ", " << "MMAX" << ", " << "alpha" << ", " << "beta" << ", " << "gamma" << ", " << "LAMBDA" << endl;
+
+  vector<int> hmin_vec = {3,3,3,3,3,4,4,4,4,5,5,5,6,6,7};
+  vector<int> hmax_vec = {3,4,5,6,7,4,5,6,7,5,6,7,6,7,7};
+  vector<int> K_vec = {91,363,1013,2345,4795,273,923,2255,4705,651,1983,4433,1333,3783,2451};
+
+  double secLmt = 60.0; // time limit of each experiment
+  int experi_num = 600; // totally run for experi_num minutes
+
+  Arguments* tspArgs;
+  LinearFittedQIteration* LinQ;
+
+  vector<string> argSTR = { TSPLIB_instances[1], tourInitMethod, learnTermiCondi, thetaInitMethod};
+
+  for(int experi = 0;experi <experi_num; experi++){
+    cout << "experiment : " << experi << " start"<< endl;
+    int hminmax_key = genrand_int31() % 15;
+    HMIN = hmin_vec.at(hminmax_key);
+    HMAX = hmax_vec.at(hminmax_key);
+    int K = K_vec.at(hminmax_key);
+
+    T = (int)(K * (1 + genrand_real3()*2));
+    TMAX = (int)(T * (1 + genrand_real3()*2)) + 30;
+    MMAX = (int)(TMAX * (1 + genrand_real3()*2)) + 30;
+
+    alpha = 1 + genrand_real3()*3;
+    beta = genrand_real3();
+
+    gamma = genrand_real3();
+    LAMBDA = genrand_int31()%20 + 2;
+
+    SEED ++;
+
+    vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
+    vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
+
+    tspArgs = new Arguments(argSTR,argINT,argREA);
+    LinQ = new LinearFittedQIteration(*tspArgs);
+    LinQ->learn(*tspArgs);
+
+    rst_file << LinQ->bestTour.getCost() << ", "<< SEED << ", " <<HMIN << ", " << HMAX << ", " << T << ", " << TMAX << ", " << MMAX << ", " << alpha << ", " << beta << ", " << gamma << ", " << LAMBDA << endl;
+
+    delete tspArgs;
+    delete LinQ;
+  }
+
+  rst_file.close();
+
+  cout << "End time : ";
+  printTime();
+*/

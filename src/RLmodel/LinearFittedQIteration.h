@@ -6,6 +6,7 @@
 #include <deque> 
 #include <utility> // std::pair
 #include <map>
+#include <fstream>
 #include "../model/Arguments.h"
 #include "../model/Tour.h"
 
@@ -27,6 +28,22 @@ class MDP{
     MDP(pair<int,int>& a, double r, LinearFittedQIteration& LinQ);
 
     void decodeFeatureVector(LinearFittedQIteration& LinQ);
+};
+
+class Event{
+  private:
+    string name;
+    int epi;
+    int step;
+    int time;
+    int tourCount;
+    int swapCount;
+    double sec;
+    double nowScore;
+    double bestScore;
+  public:
+    Event(char eventName[], LinearFittedQIteration& LinQ);
+    void print(ofstream& f);
 };
 
 class LinearFittedQIteration{
@@ -58,6 +75,7 @@ class LinearFittedQIteration{
     int MAXepi; // const EPI_LIMIT in tspArgs
 
     int initTourCount;
+    int swapCount;
     vector<pair<int,double> > bestScoreVec;
 
     // Focusing Tour : State of now
@@ -100,6 +118,8 @@ class LinearFittedQIteration{
      * 4 is sum of 5 ~ 9
      */
     vector<time_t> timeVec;
+    vector<Event> eventVec;
+    bool inNewRecord;
 
   public:
     // constructor

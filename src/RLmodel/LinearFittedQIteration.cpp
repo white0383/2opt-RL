@@ -109,19 +109,21 @@ LinearFittedQIteration::LinearFittedQIteration(const Arguments& tspArgs){
   this->epi = 1;
   this->MAXepi = tspArgs.EPI_LIMIT;
   this->initTourCount = 0;
+  this->swapCount = 0;
 
   LinearFittedQIteration::resetState(tspArgs);
   this->bestTour = this->s_now;
 
   this->tourLengthChange = 0;
+  this->eventVec.clear();
 }
 
 void LinearFittedQIteration::learn(const Arguments& tspArgs){
   //cout << "===== Learning start =====" << endl;
+  this->eventVec.emplace_back(Event("learn begin",*this));
   this->timeVec.assign(12,0);
 
   time_t startLearn = clock();
-
   time_t startMemo = 0;
 
   while(LinearFittedQIteration::checkTerminationCondition(tspArgs) == false){
@@ -145,6 +147,7 @@ void LinearFittedQIteration::learn(const Arguments& tspArgs){
   }
 
   this->timeVec.at(0) = clock() - startLearn;
+  this->eventVec.emplace_back(Event("learn ends",*this));
   //cout << "Learning finish" << endl;
 }
 
@@ -298,10 +301,16 @@ pair<int,int> LinearFittedQIteration::searchActionGreedy(const Arguments& tspArg
 }
 
 void LinearFittedQIteration::resetState(const Arguments& tspArgs){
+  this->eventVec.emplace_back(Event("local optima",*this));
+
   this->s_now = generateInitialSolution(tspArgs);
   this->initTourCount += 1;
+  this->swapCount = 0;
+  this->inNewRecord = false;
   s_now.setCost(tspArgs.V);
   LinearFittedQIteration::setFeatureVector_state(tspArgs);
+
+  this->eventVec.emplace_back(Event("new initTour",*this));
 }
 
 void LinearFittedQIteration::setFeatureVector_state(const Arguments& tspArgs){
@@ -427,6 +436,11 @@ void LinearFittedQIteration::update(pair<int,int>& a_now, MDP& mdp_now, const Ar
   startMemo = clock();
   if(this->bestTour.getCost() > this->s_now.getCost()){
     this->bestTour = this->s_now;
+    
+    if(this->inNewRecord == true) this->eventVec.pop_back(); // to prevent saving every info of the first initTour
+    this->eventVec.emplace_back(Event("update best",*this));
+    this->inNewRecord = true;
+
     //cout << "count "<< this->initTourCount <<" best " << this->bestTour.getCost() << endl;;
     this->updateBestScoreVec();
   }
@@ -444,11 +458,14 @@ void LinearFittedQIteration::update(pair<int,int>& a_now, MDP& mdp_now, const Ar
   
   // update theta when step > MAXstep
   if(this->step > this->MAXstep){
+    this->eventVec.emplace_back(Event("epi end",*this));
+
     this->step = 1;
     this->epi += 1;
     startMemo = clock();
     this->updateTheta(tspArgs);
     this->timeVec.at(9) += clock() - startMemo;
+    this->eventVec.emplace_back(Event("epi begin",*this));
   }
 }
 
@@ -474,6 +491,7 @@ void LinearFittedQIteration::updateReplayBuffer(MDP& mdp_now, const Arguments& t
 void LinearFittedQIteration::updateStateNow(pair<int,int>& a_now){
   FastTwoOptHelper::swapTwoOpt(this->s_now,a_now);
   this->s_now.setCost(this->s_now.getCost() + this->tourLengthChange);
+  this->swapCount += 1;
 }
 
 void LinearFittedQIteration::updateFeatureVectorState(){
@@ -691,4 +709,28 @@ void MDP::decodeFeatureVector(LinearFittedQIteration& LinQ){
   for(pair<int,double> actionFeature : LinQ.featureVector_action){
     this->featureVector.at(actionFeature.first) += actionFeature.second;
   }
+}
+
+//========= Event Member ===========================================
+Event::Event(char eventName[],LinearFittedQIteration& LinQ){
+  this->name = eventName;
+  this->epi  = LinQ.epi;
+  this->step = LinQ.step;
+  this->time = LinQ.time;
+  this->tourCount = LinQ.initTourCount;
+  this->swapCount = LinQ.swapCount;
+  this->sec = (double)(clock() - LinQ.startTimeT) / CLOCKS_PER_SEC;
+  this->bestScore = LinQ.bestTour.getCost();
+  this->nowScore = LinQ.s_now.getCost();
+}
+void Event::print(ofstream& f){
+  f << this->name << " ,";
+  f << this->epi << " ,";
+  f << this->step << " ,";
+  f << this->time << " ,";
+  f << this->tourCount << " ,";
+  f << this->swapCount << " ,";
+  f << this->nowScore << " ,";
+  f << this->bestScore << " ,";
+  f << this->sec << "\n";
 }

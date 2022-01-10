@@ -65,9 +65,9 @@ int main(){
   string thetaInitMethod = "ONE"; // UNI GAU ONE
 
   //**** Learning Hyperparameters
-  int T = 1200; // the number of samples for each learning
-  int TMAX = 3600; // the number of steps per theta update
-  int MMAX = 6000; // maximum size of MDP queue
+  int T = 100; // the number of samples for each learning
+  int TMAX = 300; // the number of steps per theta update
+  int MMAX = 1000; // maximum size of MDP queue
   int LAMBDA = 13; // parameter in calculating rho
   int HMIN = 3; // minimum axis divisions in partition
   int HMAX = 6; // maximum axis divisions in partition
@@ -80,28 +80,40 @@ int main(){
   //**** Other Hyperparameters
   int SEED = 1070466; // Jan 7th 01:23
   int EPILMT = 50;
-  double secLmt = 3.0;
+  double secLmt = 60.0;
 
   /*********************************/
   /***** Experiment code below *****/
   /*********************************/
-    //vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    //vector<string> argSTR = {TSPLIB_KRO100s[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
     //vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
     //vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
     //Arguments tspArgs = Arguments(argSTR,argINT,argREA);
+    //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
+    //LinQ.learn(tspArgs);
 
-/* Test F2OPTM's performance */
+/* F2OPTM vs RL in various HMIN, T*/
     alpha = 4.0;
     beta = 0.5;
     gamma = 0.35;
     LAMBDA = 13;
-    vector<int> SEEDs = {1245,2316,1541,7461,8459};
-    vector<string> TSPs = TSPLIB_KRO100s;
+    vector<int> SEEDs = {1245,2316,1541,7461,8459}; // more to ten ?
+    vector<string> TSPs = {"kroA100", "gr202"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
     vector<int> Ts = {100,200,400,800,1600,3200};
     vector<int> HMINs = {3,4,5,6};
-    string rstFileHead = "F2OPTMrst";
-    string rstFileTail = ".csv";
+    HMIN = HMINs.front();
+    HMAX = HMINs.back();
     string localMethod = "F2OPTM";
+    
+    //====== output file data
+    string rstFileDir  = "../result/rawdata/";
+    string rstFileHead = "performanceCompareRst";
+    string rstFileTail = ".csv";
+
+    string logFileDir  = "../result/log/";
+    string logFileHead = "performanceCompareLog";
+    string logFileTail = ".csv";
+    //=======================
 
     Arguments* tspArgs;
     LinearFittedQIteration* LinQ;
@@ -111,25 +123,26 @@ int main(){
     vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
     vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
-    string rstFileName = rstFileHead + rstFileTail;
-    ofstream rst_file(rstFileName);
     for(string TSP : TSPs){
       argSTR[0] = TSP;
-      //string rstFileName = rstFileHead + TSP + rstFileTail;
-      //ofstream rst_file(rstFileName);
+      string rstFileName = rstFileDir + rstFileHead + "_" +TSP + rstFileTail;
+      ofstream rst_file(rstFileName);
       rst_file << "HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine \n";
+
       for(int seed : SEEDs){
         argINT[6] = seed;
         tspArgs = new Arguments(argSTR, argINT, argREA);
-        /*
         for(int t : Ts){
-          tspArgs->T = t;
-          tspArgs->TMAX = t * 3;
-          tspArgs->MMAX = t * 5;
+          tspArgs->T = t; // 1 : 2 : 6 rule
+          tspArgs->TMAX = t * 2;
+          tspArgs->MMAX = t * 6;
           for(int hmin : HMINs){
+            string logFileName = logFileDir + logFileHead + "_" + TSP + "_" + to_string(seed) + "_" + to_string(t) + "_" + to_string(hmin) + rstFileTail;
+            ofstream log_file(logFileName);
+            //======== RL experiment part ===========
             tspArgs->HMIN = hmin;
             tspArgs->resetRNG();
-            cout << t << " " << hmin << endl;
+            cout << TSP << " " << seed << " " << t << " " << hmin << endl;
 
             LinQ = new LinearFittedQIteration(*tspArgs);
             LinQ->learn(*tspArgs);
@@ -149,18 +162,25 @@ int main(){
             }
             rst_file << "\n";
 
+            // print event log
+            log_file << "Event, epi, step, time, tourCount, swapCount, nowScore, bestScore, sec \n"; 
+            for(auto log : LinQ->eventVec){
+              log.print(log_file);
+            }
 
+            //===================================
+            log_file.close();
             delete LinQ;
           }
         }
-        */
 
         tspArgs->resetRNG();
         LStester = new LocalSearchTester(*tspArgs,localMethod);
-        LStester->setPr(greedyEps);   
+        LStester->setPr(greedyEps);
         LStester->run(*tspArgs);
+
         // print LStester info
-        rst_file << "F2OPTB ,"<< TSP << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        rst_file << "F2OPTB ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
         for(int i=0;i<15;i++){
           rst_file << " ,";
         } 
@@ -169,126 +189,21 @@ int main(){
         }
         rst_file << "\n";
 
+        // print event log
+        string logFileName = logFileDir + logFileHead + "_" + TSP + "_" + to_string(seed) + "_" + localMethod + rstFileTail;
+        ofstream log_file(logFileName);
+        log_file << "tourCount, initScore, optScore, bestScore, sec\n";
+        for(auto log : LStester->eventVec){
+          log.print(log_file);
+        }
+
         delete tspArgs;
         delete LStester;
+        log_file.close();
       }
 
-      //rst_file.close();
-      //delete tspArgs;
+      rst_file.close();
     }
-    rst_file.close();
-
-
-// */
-
-/* F2OPTB vs RL test
-    Arguments* tspArgsFB;
-    Arguments* tspArgsRL;
-    LinearFittedQIteration* LinQ;
-    LocalSearchTester* LStester;
-  
-    int testNum = 10;
-    string LOCAL_METHOD = "F2OPTB";
-    for(int testIndex = 0; testIndex < testNum ; testIndex++){
-      argINT[6] += 1;
-
-      cout << testIndex << endl;
-
-      tspArgsRL = new Arguments(argSTR,argINT,argREA);
-      tspArgsFB = new Arguments(argSTR,argINT,argREA);
-
-      LinQ = new LinearFittedQIteration(*tspArgsRL);
-      LinQ->learn(*tspArgsRL);
-
-      LStester = new LocalSearchTester(*tspArgsFB,LOCAL_METHOD);
-      LStester->run(*tspArgsFB);
-
-      cout << "test " << testIndex << endl;
-      cout << "  LinQ best : " << LinQ->bestTour.getCost();
-      cout << "  LStester best : " << LStester->bestScore << endl;
-
-      cout << "  LinQ time line : ";
-      cout << LinQ->initTourCount << " initTours ";
-      cout << LinQ->epi << " epis " ;
-      cout << LinQ->time << " ite " << endl;
-      for(auto foo : LinQ->bestScoreVec){
-        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
-      }
-
-      cout << "  LStester time line : ";
-      cout << LStester->initTourCount << " initTours" << endl;
-      for(auto foo : LStester->bestScoreVec){
-        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
-      }
-
-      delete tspArgsRL;
-      delete tspArgsFB;
-      delete LinQ;
-      delete LStester;
-    }
-
-*/
-
-/*
-  //============ Hyper Parameter searching =========
-  cout << "Start time : ";
-  printTime();
-
-  string fileName = "hyperParameterSearchRstRD100.csv";
-  ofstream rst_file(fileName);
-
-  // write the fist line
-  rst_file << "Best Score" << ", "<<"SEED"<<", " << "HMIN" << ", " << "HMAX" << ", " << "T" << ", " << "TMAX" << ", " << "MMAX" << ", " << "alpha" << ", " << "beta" << ", " << "gamma" << ", " << "LAMBDA" << endl;
-
-  vector<int> hmin_vec = {3,3,3,3,3,4,4,4,4,5,5,5,6,6,7};
-  vector<int> hmax_vec = {3,4,5,6,7,4,5,6,7,5,6,7,6,7,7};
-  vector<int> K_vec = {91,363,1013,2345,4795,273,923,2255,4705,651,1983,4433,1333,3783,2451};
-
-  double secLmt = 60.0; // time limit of each experiment
-  int experi_num = 600; // totally run for experi_num minutes
-
-  Arguments* tspArgs;
-  LinearFittedQIteration* LinQ;
-
-  vector<string> argSTR = { TSPLIB_instances[1], tourInitMethod, learnTermiCondi, thetaInitMethod};
-
-  for(int experi = 0;experi <experi_num; experi++){
-    cout << "experiment : " << experi << " start"<< endl;
-    int hminmax_key = genrand_int31() % 15;
-    HMIN = hmin_vec.at(hminmax_key);
-    HMAX = hmax_vec.at(hminmax_key);
-    int K = K_vec.at(hminmax_key);
-
-    T = (int)(K * (1 + genrand_real3()*2));
-    TMAX = (int)(T * (1 + genrand_real3()*2)) + 30;
-    MMAX = (int)(TMAX * (1 + genrand_real3()*2)) + 30;
-
-    alpha = 1 + genrand_real3()*3;
-    beta = genrand_real3();
-
-    gamma = genrand_real3();
-    LAMBDA = genrand_int31()%20 + 2;
-
-    SEED ++;
-
-    vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
-    vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
-
-    tspArgs = new Arguments(argSTR,argINT,argREA);
-    LinQ = new LinearFittedQIteration(*tspArgs);
-    LinQ->learn(*tspArgs);
-
-    rst_file << LinQ->bestTour.getCost() << ", "<< SEED << ", " <<HMIN << ", " << HMAX << ", " << T << ", " << TMAX << ", " << MMAX << ", " << alpha << ", " << beta << ", " << gamma << ", " << LAMBDA << endl;
-
-    delete tspArgs;
-    delete LinQ;
-  }
-
-  rst_file.close();
-
-  cout << "End time : ";
-  printTime();
-*/
 
   return 0;
 }

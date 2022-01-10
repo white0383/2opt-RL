@@ -5,10 +5,25 @@
 #include <string>
 #include <vector>
 #include <utility> // std::pair
+#include <fstream>
 
 #include "../../model/Arguments.h"
 
 using namespace std;
+
+class LocalSearchTester;
+
+class Event_mini{
+  public:
+    int tourCount;
+    double initScore;
+    double optScore;
+    double bestScore;
+    double spendSec;
+  public:
+    Event_mini(LocalSearchTester& LStester);
+    void print(ofstream& f);
+};
 
 class LocalSearchTester{
   public:
@@ -20,6 +35,10 @@ class LocalSearchTester{
     vector<pair<int, double> > bestScoreVec;
     int initTourCount;
     double pr;
+
+    double initScore;
+    double optScore;
+    vector<Event_mini> eventVec;
 
   public:
     LocalSearchTester(const Arguments& tspArgs, string& LOCAL_METHOD);

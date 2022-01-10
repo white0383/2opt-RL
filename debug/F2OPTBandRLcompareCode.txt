@@ -1,0 +1,47 @@
+
+/* F2OPTB vs RL test
+    Arguments* tspArgsFB;
+    Arguments* tspArgsRL;
+    LinearFittedQIteration* LinQ;
+    LocalSearchTester* LStester;
+  
+    int testNum = 10;
+    string LOCAL_METHOD = "F2OPTB";
+    for(int testIndex = 0; testIndex < testNum ; testIndex++){
+      argINT[6] += 1;
+
+      cout << testIndex << endl;
+
+      tspArgsRL = new Arguments(argSTR,argINT,argREA);
+      tspArgsFB = new Arguments(argSTR,argINT,argREA);
+
+      LinQ = new LinearFittedQIteration(*tspArgsRL);
+      LinQ->learn(*tspArgsRL);
+
+      LStester = new LocalSearchTester(*tspArgsFB,LOCAL_METHOD);
+      LStester->run(*tspArgsFB);
+
+      cout << "test " << testIndex << endl;
+      cout << "  LinQ best : " << LinQ->bestTour.getCost();
+      cout << "  LStester best : " << LStester->bestScore << endl;
+
+      cout << "  LinQ time line : ";
+      cout << LinQ->initTourCount << " initTours ";
+      cout << LinQ->epi << " epis " ;
+      cout << LinQ->time << " ite " << endl;
+      for(auto foo : LinQ->bestScoreVec){
+        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
+      }
+
+      cout << "  LStester time line : ";
+      cout << LStester->initTourCount << " initTours" << endl;
+      for(auto foo : LStester->bestScoreVec){
+        cout << "    ite : " << foo.first << " score : " << foo.second << endl;
+      }
+
+      delete tspArgsRL;
+      delete tspArgsFB;
+      delete LinQ;
+      delete LStester;
+    }
+*/
