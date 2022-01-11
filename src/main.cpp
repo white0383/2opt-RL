@@ -92,26 +92,27 @@ int main(){
     //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
     //LinQ.learn(tspArgs);
 
-/* F2OPTM vs RL in various HMIN, T*/
+/* observe how it works for 1 hours */
     alpha = 4.0;
     beta = 0.5;
     gamma = 0.35;
     LAMBDA = 13;
     vector<int> SEEDs = {1245,2316,1541,7461,8459}; // more to ten ?
-    vector<string> TSPs = {"kroA100", "gr202"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
-    vector<int> Ts = {100,200,400,800,1600,3200};
-    vector<int> HMINs = {3,4,5,6};
+    vector<string> TSPs = {"gr202"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
+    vector<int> Ts = {3200};
+    vector<int> HMINs = {4};
     HMIN = HMINs.front();
-    HMAX = HMINs.back();
+    HMAX = 6;
+    secLmt = 3600.0; // one hour
     string localMethod = "F2OPTM";
     
     //====== output file data
     string rstFileDir  = "../result/rawdata/";
-    string rstFileHead = "performanceCompareRst";
+    string rstFileHead = "oneHourRst";
     string rstFileTail = ".csv";
 
     string logFileDir  = "../result/log/";
-    string logFileHead = "performanceCompareLog";
+    string logFileHead = "oneHourRst";
     string logFileTail = ".csv";
     //=======================
 
@@ -124,6 +125,7 @@ int main(){
     vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
 
     for(string TSP : TSPs){
+      argREA[5] = secLmt;
       argSTR[0] = TSP;
       string rstFileName = rstFileDir + rstFileHead + "_" +TSP + rstFileTail;
       ofstream rst_file(rstFileName);
@@ -174,13 +176,14 @@ int main(){
           }
         }
 
+        tspArgs->SEC_LIMIT = secLmt / 6.0;
         tspArgs->resetRNG();
         LStester = new LocalSearchTester(*tspArgs,localMethod);
         LStester->setPr(greedyEps);
         LStester->run(*tspArgs);
 
         // print LStester info
-        rst_file << "F2OPTB ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        rst_file << "F2OPTM ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
         for(int i=0;i<15;i++){
           rst_file << " ,";
         } 
