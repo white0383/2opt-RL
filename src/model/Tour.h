@@ -46,6 +46,8 @@ class Tour{
      */
     int size;
 
+    int swapNum;
+
   public:
     /**
      * Default constructor
@@ -188,6 +190,9 @@ class Tour{
      * when j == n then pi[0] is also a
      */
     void swap(int i, int j);
+
+    void setSwapNum(int swaps);
+    int getSwapNum();
 };
 
 #endif //TSP_TOUR_H

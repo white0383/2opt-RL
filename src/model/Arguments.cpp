@@ -33,7 +33,8 @@ vector<string> INIT_SOLUTION_METHOD_LIST = {
 
 vector<string> TERMINATE_METHOS_LIST {
   "SEC", //computation second
-  "EPI"  //maximum episode
+  "EPI", //maximum episode
+  "TOUR" //meximum init tours
 };
 
 vector<string> THETA_INIT_METHOD_LIST {

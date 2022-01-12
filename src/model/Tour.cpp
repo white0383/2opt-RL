@@ -92,6 +92,8 @@ Tour::Tour(const vector<int>& orders, const Graph& g){
 
     this->pi = TourHelper::convertOrdersToPi(orders);
     this->pi_inv = TourHelper::convertOrdersToPiInv(orders, g.getN());
+
+    this->swapNum = 0;
   }
 }
 
@@ -246,4 +248,12 @@ void Tour::swap(int i, int j){
 
   if(i == 1) this->pi[this->size + 1] = this->pi[i];
   if(j == this->size) this->pi[0] = this->pi[j];
+}
+
+void Tour::setSwapNum(int swaps){
+  this->swapNum = swaps;
+}
+
+int Tour::getSwapNum(){
+  return this->swapNum;
 }

@@ -20,6 +20,7 @@ class Event_mini{
     double optScore;
     double bestScore;
     double spendSec;
+    double swapNum;
   public:
     Event_mini(LocalSearchTester& LStester);
     void print(ofstream& f);
@@ -32,9 +33,13 @@ class LocalSearchTester{
     double bestScore;
     string LOCAL_METHOD;
     double secLimit;
+    double maxInitTour;
     vector<pair<int, double> > bestScoreVec;
     int initTourCount;
     double pr;
+    string TERMINATE_CONDITION;
+    int swapNum;
+    int totalSwapNum;
 
     double initScore;
     double optScore;
@@ -44,6 +49,7 @@ class LocalSearchTester{
     LocalSearchTester(const Arguments& tspArgs, string& LOCAL_METHOD);
 
     void setPr(double pr);
+    bool checkTerminate();
     void run(const Arguments& tspArgs);
 };
 

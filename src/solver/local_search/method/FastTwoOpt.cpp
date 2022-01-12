@@ -162,6 +162,7 @@ Tour fastTwoOpt(const Graph& g, Tour& pi){
     } // end for i
   } // end while
 
+  pi_star.setSwapNum(swapNum);
   return pi_star;
 }
 
@@ -233,6 +234,7 @@ Tour fastTwoOptBestInP(const Graph& g, Tour& pi, double pr){
     }
   } // end while
 
+  pi_star.setSwapNum(swapNum);
   return pi_star;
 }
 
@@ -339,6 +341,7 @@ Tour fastTwoOptMix(const Graph& g, Tour& pi, double pr){
 
   } // end while
 
+  pi_star.setSwapNum(swapNum);
   return pi_star;
 }
 

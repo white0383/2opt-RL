@@ -1,0 +1,128 @@
+
+  /*********************************/
+  /***** Experiment Code begin *****/
+  /*********************************/
+/* argmax to argmin */
+/* just times -1 to Q function !!*/
+/* big TSP*/
+    alpha = 100000.0;
+    beta = 0.5;
+    gamma = 0.35;
+    LAMBDA = 13;
+
+    vector<int> SEEDs = {1245}; // more to ten ?
+    vector<string> TSPs = {"kroA100"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
+    vector<int> Ts = {3200};
+    vector<int> HMINs = {4};
+    HMIN = HMINs.front();
+    HMAX = 6;
+    secLmt = 60.0; // one min
+    learnTermiCondi = "EPI";
+    EPILMT = 20;
+    thetaInitPara = 1.0; // make first theta best improvement
+    greedyEps = 0.1;
+    string localMethod = "F2OPTM";
+    
+    //====== output file data
+    string rstFileDir  = "../result/rawdata/";
+    string rstFileHead = "superBigAlphaRst";
+    string rstFileTail = ".csv";
+
+    string logFileDir  = "../result/log/";
+    string logFileHead = "superBigAlphaLog";
+    string logFileTail = ".csv";
+    //=======================
+
+    Arguments* tspArgs;
+    LinearFittedQIteration* LinQ;
+    LocalSearchTester* LStester;
+
+    vector<string> argSTR = { TSPLIB_instances[0], tourInitMethod, learnTermiCondi, thetaInitMethod};
+    vector<int> argINT = {T, TMAX, MMAX, LAMBDA,HMIN,HMAX, SEED,EPILMT};
+    vector<double> argREA = {alpha, beta, gamma, thetaInitPara, greedyEps, secLmt};
+
+    for(string TSP : TSPs){
+      argREA[5] = secLmt;
+      argSTR[0] = TSP;
+      string rstFileName = rstFileDir + rstFileHead + "_" +TSP + rstFileTail;
+      ofstream rst_file(rstFileName);
+      rst_file << "HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine \n";
+
+      for(int seed : SEEDs){
+        argINT[6] = seed;
+        tspArgs = new Arguments(argSTR, argINT, argREA);
+        for(int t : Ts){
+          tspArgs->T = t; // 1 : 2 : 6 rule
+          tspArgs->TMAX = t * 2;
+          tspArgs->MMAX = t * 6;
+
+          for(int hmin : HMINs){
+            string logFileName = logFileDir + logFileHead + "_" + TSP + "_" + to_string(seed) + "_" + to_string(t) + "_" + to_string(hmin) + rstFileTail;
+            ofstream log_file(logFileName);
+            //======== RL experiment part ===========
+            tspArgs->HMIN = hmin;
+            tspArgs->resetRNG();
+            cout << TSP << " " << seed << " " << t << " " << hmin << endl;
+
+            LinQ = new LinearFittedQIteration(*tspArgs);
+            LinQ->learn(*tspArgs);
+            // print LinQ info
+            rst_file << tspArgs->HMIN << " ,";
+            rst_file << tspArgs->T << " ,";
+            rst_file << tspArgs->SEED << " ,";
+            rst_file << LinQ->bestTour.getCost() << " ,";
+            rst_file << LinQ->initTourCount << " ,";
+            rst_file << LinQ->time << " ,";
+            rst_file << LinQ->epi << " ,";
+            for(time_t time : LinQ->timeVec){
+              rst_file << (double)time/CLOCKS_PER_SEC << " ,";
+            }
+            for(pair<int,double> p : LinQ->bestScoreVec){
+              rst_file << p.first << " ," << p.second << " ,";
+            }
+            rst_file << "\n";
+
+            // print event log
+            log_file << "Event, epi, step, time, tourCount, swapCount, nowScore, bestScore, sec \n"; 
+            for(auto log : LinQ->eventVec){
+              log.print(log_file);
+            }
+
+            //===================================
+            log_file.close();
+            delete LinQ;
+          }
+        }
+
+        tspArgs->resetRNG();
+        LStester = new LocalSearchTester(*tspArgs,localMethod);
+        LStester->setPr(greedyEps);
+        LStester->run(*tspArgs);
+
+        // print LStester info
+        rst_file << localMethod <<" ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        for(int i=0;i<15;i++){
+          rst_file << " ,";
+        } 
+        for(pair<int,double> p : LStester->bestScoreVec){
+          rst_file << p.first << " ," << p.second << " ,";
+        }
+        rst_file << "\n";
+
+        // print event log
+        string logFileName = logFileDir + logFileHead + "_" + TSP + "_" + to_string(seed) + "_" + localMethod + rstFileTail;
+        ofstream log_file(logFileName);
+        log_file << "tourCount, initScore, optScore, bestScore, sec\n";
+        for(auto log : LStester->eventVec){
+          log.print(log_file);
+        }
+
+        delete tspArgs;
+        delete LStester;
+        log_file.close();
+      }
+
+      rst_file.close();
+    }
+
+  // ======== Experiment Code end =======

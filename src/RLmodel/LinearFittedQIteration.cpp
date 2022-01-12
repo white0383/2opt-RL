@@ -156,7 +156,9 @@ bool LinearFittedQIteration::checkTerminationCondition(const Arguments& tspArgs)
     return (this->epi > this->MAXepi);
   }else if(tspArgs.LEARN_TERMINATE_METHOD == "SEC"){
     return (this->spendSec > this->MAXspendSec);
-  } 
+  }else if(tspArgs.LEARN_TERMINATE_METHOD == "TOUR"){
+    return (this->initTourCount > this->MAXepi);
+  }
 }
 
 pair<int,int> LinearFittedQIteration::searchAction(const Arguments& tspArgs){
@@ -385,7 +387,6 @@ double LinearFittedQIteration::calcReward(const Arguments& tspArgs){
 
   rst_reward += pow(tspArgs.ALPHA, ((this->bestTour.getCost() * 1.20) / (this->s_now.getCost() + this->tourLengthChange))-1);
   rst_reward += tspArgs.BETA * ((this->s_now.getCost() / (this->s_now.getCost() + this->tourLengthChange)) -1);
-  cout << rst_reward << endl;
 
   return rst_reward;
 }
