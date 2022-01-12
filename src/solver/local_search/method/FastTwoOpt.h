@@ -30,6 +30,7 @@ namespace FastTwoOptHelper{
   double getAfterMinusBefore(int p,int pp,int q,int qp, const Graph& g);
   double getAfterMinusBefore(Tour& pi, pair<int,int> IJ, const Graph& g);
   pair<int,int> getMaxScoredIJ(map<double,pair<int,int> >& m);
+  pair<int,int> getMinScoredIJ(map<double,pair<int,int> >& m);
   void swapTwoOpt(Tour& pi, pair<int,int> IJ);
 }
 

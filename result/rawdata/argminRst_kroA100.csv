@@ -1,0 +1,3 @@
+HMIN , T, SEED, bestScore, tourCount, ite, epi, learn, action, reward, mdp, update, reBu, state, bestInfo, feaVec, theta, dataSec, CPLEX, TimeLine 
+4 ,400 ,1245 ,8.08638 ,37 ,12457 ,16 ,60.0003 ,36.8531 ,0.006864 ,0.564243 ,22.2613 ,0.305469 ,0.014895 ,0.005826 ,0.008616 ,21.8918 ,14.5972 ,7.162 ,1 ,8.63225 ,2 ,8.6146 ,5 ,8.08638 ,
+F2OPTL , ,1245 ,8.80323 ,2   , , , , , , , , , , , , , , ,1 ,8.94354 ,2 ,8.80323 ,

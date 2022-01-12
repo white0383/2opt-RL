@@ -383,8 +383,9 @@ void LinearFittedQIteration::setFeatureVector_action(pair<int,int> action, const
 double LinearFittedQIteration::calcReward(const Arguments& tspArgs){
   double rst_reward = 0;
 
-  rst_reward += pow(tspArgs.ALPHA, (this->bestTour.getCost() / (this->s_now.getCost() + this->tourLengthChange))-1);
+  rst_reward += pow(tspArgs.ALPHA, ((this->bestTour.getCost() * 1.20) / (this->s_now.getCost() + this->tourLengthChange))-1);
   rst_reward += tspArgs.BETA * ((this->s_now.getCost() / (this->s_now.getCost() + this->tourLengthChange)) -1);
+  cout << rst_reward << endl;
 
   return rst_reward;
 }
@@ -410,10 +411,17 @@ double LinearFittedQIteration::calcActionValue(int p,int pp, int q, int qp, cons
     int d3Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,qInPartitionH,h);
     int d4Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(ppInPartitionH,qpInPartitionH,h);
 
-    rst_actVal -= d1 * this->theta.at(d1Index) / tspArgs.U;
-    rst_actVal -= d2 * this->theta.at(d2Index) / tspArgs.U;
-    rst_actVal += d3 * this->theta.at(d3Index) / tspArgs.U;
-    rst_actVal += d4 * this->theta.at(d4Index) / tspArgs.U;
+      // original Q function (argmax) (converge to least improvement)
+    //rst_actVal -= d1 * this->theta.at(d1Index) / tspArgs.U;
+    //rst_actVal -= d2 * this->theta.at(d2Index) / tspArgs.U;
+    //rst_actVal += d3 * this->theta.at(d3Index) / tspArgs.U;
+    //rst_actVal += d4 * this->theta.at(d4Index) / tspArgs.U;
+
+      // modified Q function (argmin) 
+    rst_actVal += d1 * this->theta.at(d1Index) / tspArgs.U;
+    rst_actVal += d2 * this->theta.at(d2Index) / tspArgs.U;
+    rst_actVal -= d3 * this->theta.at(d3Index) / tspArgs.U;
+    rst_actVal -= d4 * this->theta.at(d4Index) / tspArgs.U;
   }
 
   return rst_actVal;
@@ -565,10 +573,17 @@ namespace DataSetHelper{
       int d3Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(pInPartitionH,qInPartitionH,h);
       int d4Index = partitionHBegin + LinQHelper::getEdgeIndexInPartition(ppInPartitionH,qpInPartitionH,h);
 
-      rst_actVal -= d1 * theta.at(d1Index) / tspArgs.U;
-      rst_actVal -= d2 * theta.at(d2Index) / tspArgs.U;
-      rst_actVal += d3 * theta.at(d3Index) / tspArgs.U;
-      rst_actVal += d4 * theta.at(d4Index) / tspArgs.U;
+        // original Q function (argmax) (converge to least improvement)
+      //rst_actVal -= d1 * theta.at(d1Index) / tspArgs.U;
+      //rst_actVal -= d2 * theta.at(d2Index) / tspArgs.U;
+      //rst_actVal += d3 * theta.at(d3Index) / tspArgs.U;
+      //rst_actVal += d4 * theta.at(d4Index) / tspArgs.U;
+
+        // modified Q function (argmin) 
+      rst_actVal += d1 * theta.at(d1Index) / tspArgs.U;
+      rst_actVal += d2 * theta.at(d2Index) / tspArgs.U;
+      rst_actVal -= d3 * theta.at(d3Index) / tspArgs.U;
+      rst_actVal -= d4 * theta.at(d4Index) / tspArgs.U;
     }
 
     return rst_actVal;

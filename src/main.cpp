@@ -92,27 +92,34 @@ int main(){
     //LinearFittedQIteration LinQ = LinearFittedQIteration(tspArgs);
     //LinQ.learn(tspArgs);
 
-/* observe how it works for 1 hours */
-    alpha = 4.0;
+/* argmax to argmin */
+/* just times -1 to Q function !!*/
+/* big TSP*/
+    alpha = 100000.0;
     beta = 0.5;
     gamma = 0.35;
     LAMBDA = 13;
-    vector<int> SEEDs = {1245,2316,1541,7461,8459}; // more to ten ?
-    vector<string> TSPs = {"gr202"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
+
+    vector<int> SEEDs = {1245}; // more to ten ?
+    vector<string> TSPs = {"kroA100"}; // {"kroA100", "kroB100", "kroC100", "kroD100", "kroE100"};
     vector<int> Ts = {3200};
     vector<int> HMINs = {4};
     HMIN = HMINs.front();
     HMAX = 6;
-    secLmt = 3600.0; // one hour
+    secLmt = 60.0; // one min
+    learnTermiCondi = "EPI";
+    EPILMT = 20;
+    thetaInitPara = 1.0; // make first theta best improvement
+    greedyEps = 0.1;
     string localMethod = "F2OPTM";
     
     //====== output file data
     string rstFileDir  = "../result/rawdata/";
-    string rstFileHead = "oneHourRst";
+    string rstFileHead = "superBigAlphaRst";
     string rstFileTail = ".csv";
 
     string logFileDir  = "../result/log/";
-    string logFileHead = "oneHourRst";
+    string logFileHead = "superBigAlphaLog";
     string logFileTail = ".csv";
     //=======================
 
@@ -138,6 +145,7 @@ int main(){
           tspArgs->T = t; // 1 : 2 : 6 rule
           tspArgs->TMAX = t * 2;
           tspArgs->MMAX = t * 6;
+
           for(int hmin : HMINs){
             string logFileName = logFileDir + logFileHead + "_" + TSP + "_" + to_string(seed) + "_" + to_string(t) + "_" + to_string(hmin) + rstFileTail;
             ofstream log_file(logFileName);
@@ -176,14 +184,13 @@ int main(){
           }
         }
 
-        tspArgs->SEC_LIMIT = secLmt / 6.0;
         tspArgs->resetRNG();
         LStester = new LocalSearchTester(*tspArgs,localMethod);
         LStester->setPr(greedyEps);
         LStester->run(*tspArgs);
 
         // print LStester info
-        rst_file << "F2OPTM ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
+        rst_file << localMethod <<" ," << " ," << seed << " ," << LStester->bestScore << " ," << LStester->initTourCount << "  ";
         for(int i=0;i<15;i++){
           rst_file << " ,";
         } 
