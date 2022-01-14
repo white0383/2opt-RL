@@ -60,6 +60,8 @@ vector<string> EXPERI_MINI_FILES = {
 "vm1084", "d1655"
 };
 
+
+
 vector<string> EXPERI_FULL_FILES = {
 "burma14", "ulysses16", "ulysses22", "att48", "eil51", "berlin52", "st70", "eil76", "pr76", "gr96", 
 "rat99", "rd100", "kroA100", "kroB100", "kroC100", "kroD100", "kroE100", "eil101", "lin105", "pr107", 
@@ -124,7 +126,8 @@ int main(){
 
     vector<string> localMethods = {"F2OPT", "F2OPTB", "F2OPTM"};
     vector<int> SEEDs = {2844, 5765, 8471, 9677, 6414};
-    vector<string> TSPs = EXPERI_MINI_FILES;
+    vector<string> TSPs = {"pr299", "rd400", "gr431", "pr439","rat575", 
+"vm1084", "d1655"};//EXPERI_MINI_FILES;
     
     //====== output file data
     string experiName = "thesisExpMini";
